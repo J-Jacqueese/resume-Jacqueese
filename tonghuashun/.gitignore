@@ -29,4 +29,5 @@ output/reports/*
 output/dashboard/*
 !output/reports/.gitkeep
 !output/dashboard/.gitkeep
+!output/dashboard/index.html
 !output/examples/

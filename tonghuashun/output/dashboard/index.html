@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Insight Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --card-bg: #1a1a2e;
+  --border: #2a2a4a;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --accent: #00d4ff;
+  --positive: #4caf50;
+  --negative: #f44336;
+  --neutral: #ff9800;
+  --warning: #ffd93d;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 24px;
+  line-height: 1.5;
+}
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.header h1 {
+  font-size: 28px;
+  background: linear-gradient(135deg, var(--accent), #7c4dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header .date {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.card .number { font-size: 36px; font-weight: 700; }
+.card .label { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+.card .number.accent { color: var(--accent); }
+.card .number.positive { color: var(--positive); }
+.card .number.warning { color: var(--warning); }
+.card .number.negative { color: var(--negative); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.chart-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.chart-card h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.chart { width: 100%; height: 320px; }
+.chart-lg { width: 100%; height: 420px; }
+.hot-topics { margin-bottom: 24px; }
+.hot-topic-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+.hot-topic-item .rank {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-right: 12px;
+}
+.hot-topic-item h4 { display: inline; font-size: 17px; }
+.hot-topic-item .meta { color: var(--text-dim); font-size: 13px; margin: 8px 0; }
+.hot-topic-item p { font-size: 14px; margin-top: 8px; color: #ccc; }
+.trend-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.trend-section h3 { margin-bottom: 8px; }
+.trend-dim { display: inline-block; background: #2a2a4a; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 8px; }
+.risk-opp-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.risk-opp-table th, .risk-opp-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+.risk-opp-table th { color: var(--text-dim); font-weight: 600; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-risk { background: rgba(244,67,54,0.2); color: var(--negative); }
+.badge-opportunity { background: rgba(76,175,80,0.2); color: var(--positive); }
+.badge-high { background: rgba(244,67,54,0.15); color: #ff6b6b; }
+.badge-medium { background: rgba(255,152,0,0.15); color: var(--neutral); }
+.badge-low { background: rgba(76,175,80,0.15); color: var(--positive); }
+footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
+@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI Daily Insight Dashboard</h1>
+  <div class="date" id="report-date">Loading...</div>
+</div>
+
+<div class="overview-cards" id="overview-cards"></div>
+
+<div class="hot-topics" id="hot-topics"></div>
+
+<div class="grid-2">
+  <div class="chart-card"><h3>Category Distribution</h3><div class="chart" id="chart-category"></div></div>
+  <div class="chart-card"><h3>Sentiment Analysis</h3><div class="chart" id="chart-sentiment"></div></div>
+</div>
+
+<div class="grid-2">
+  <div class="chart-card"><h3>Impact Ranking (Top 10)</h3><div class="chart" id="chart-impact"></div></div>
+  <div class="chart-card"><h3>AI Domain Radar</h3><div class="chart" id="chart-radar"></div></div>
+</div>
+
+<div class="chart-card" style="margin-bottom:16px">
+  <h3>Entity Relationship Network</h3>
+  <div class="chart-lg" id="chart-network"></div>
+</div>
+
+<div class="trend-section" id="trend-section"></div>
+
+<div class="chart-card" style="margin-bottom:16px">
+  <h3>Risk & Opportunity Radar</h3>
+  <table class="risk-opp-table" id="risk-opp-table">
+    <thead><tr><th>Type</th><th>Title</th><th>Level</th><th>Description</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<footer>Generated by AI Daily Insight Engine &middot; Data: TechCrunch, The Verge, Hacker News, jiqizhixin, QbitAI, 36kr</footer>
+
+<script>
+fetch('dashboard_data.json')
+  .then(r => r.json())
+  .then(data => {
+    renderOverview(data.overview);
+    renderHotTopics(data.hot_topics);
+    renderCategoryChart(data.category_distribution);
+    renderSentimentChart(data.sentiment_distribution);
+    renderImpactChart(data.impact_ranking);
+    renderRadarChart(data.domain_radar);
+    renderNetworkChart(data.entity_network);
+    renderTrends(data.trend_summary);
+    renderRiskOppTable(data.risk_opportunities);
+    document.getElementById('report-date').textContent = 'Report Date: ' + data.metadata.report_date;
+  })
+  .catch(err => {
+    console.error('Failed to load dashboard data:', err);
+    document.body.innerHTML = '<div style="text-align:center;padding:100px;color:#f44336"><h2>Dashboard Data Not Found</h2><p>Please run the pipeline to generate dashboard_data.json</p></div>';
+  });
+
+function renderOverview(ov) {
+  if (!ov) return;
+  document.getElementById('overview-cards').innerHTML =
+    '<div class="card"><div class="number accent">' + (ov.total_articles || 0) + '</div><div class="label">Articles Analyzed</div></div>' +
+    '<div class="card"><div class="number warning">' + (ov.hot_topics_count || 0) + '</div><div class="label">Hot Topics</div></div>' +
+    '<div class="card"><div class="number negative">' + (ov.risks_count || 0) + '</div><div class="label">Risks Identified</div></div>' +
+    '<div class="card"><div class="number positive">' + (ov.opportunities_count || 0) + '</div><div class="label">Opportunities Found</div></div>';
+}
+
+function renderHotTopics(topics) {
+  if (!topics || !topics.length) return;
+  var html = '<h2 style="margin-bottom:16px">Today\'s Top Stories</h2>';
+  topics.forEach(function(t) {
+    html += '<div class="hot-topic-item">' +
+      '<span class="rank">#' + t.rank + '</span>' +
+      '<h4>' + t.title + '</h4>' +
+      '<div class="meta">Impact: ' + '<span>&#11088;</span>'.repeat(t.magnitude || 1) + ' &middot; ' + (t.category || '') + ' &middot; ' + ((t.key_players || []).join(', ')) + '</div>' +
+      '<p>' + t.summary + '</p>' +
+      '</div>';
+  });
+  document.getElementById('hot-topics').innerHTML = html;
+}
+
+function renderCategoryChart(data) {
+  if (!data || !data.length) return;
+  var chart = echarts.init(document.getElementById('chart-category'));
+  chart.setOption({
+    tooltip: { trigger: 'item' },
+    series: [{
+      type: 'pie',
+      radius: ['45%', '75%'],
+      itemStyle: { borderRadius: 6, borderColor: '#0f0f1a', borderWidth: 3 },
+      label: { color: '#888', fontSize: 12 },
+      data: data.map(function(d) { return { name: d.category, value: d.count }; })
+    }]
+  });
+}
+
+function renderSentimentChart(data) {
+  if (!data) return;
+  var chart = echarts.init(document.getElementById('chart-sentiment'));
+  chart.setOption({
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: ['Positive', 'Neutral', 'Negative'], axisLabel: { color: '#888' } },
+    yAxis: { type: 'value', axisLabel: { color: '#888' } },
+    series: [{
+      type: 'bar',
+      data: [
+        { value: data.positive || 0, itemStyle: { color: '#4caf50' } },
+        { value: data.neutral || 0, itemStyle: { color: '#ff9800' } },
+        { value: data.negative || 0, itemStyle: { color: '#f44336' } }
+      ],
+      barWidth: '50%'
+    }]
+  });
+}
+
+function renderImpactChart(data) {
+  if (!data || !data.length) return;
+  var chart = echarts.init(document.getElementById('chart-impact'));
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'value', max: 5, axisLabel: { color: '#888' } },
+    yAxis: { type: 'category', data: data.map(function(d) { return d.title; }).reverse(), axisLabel: { color: '#ccc', fontSize: 11, width: 120, overflow: 'truncate' } },
+    series: [{
+      type: 'bar',
+      data: data.map(function(d) {
+        return { value: d.magnitude, itemStyle: { color: d.magnitude >= 4 ? '#ff6b6b' : d.magnitude >= 3 ? '#ffd93d' : '#00d4ff' } };
+      }),
+      barWidth: '60%',
+      label: { show: true, position: 'right', color: '#888' }
+    }]
+  });
+}
+
+function renderRadarChart(data) {
+  if (!data || !data.length) return;
+  var chart = echarts.init(document.getElementById('chart-radar'));
+  var maxCount = Math.max.apply(null, data.map(function(d) { return d.count; }).concat([1]));
+  chart.setOption({
+    radar: {
+      indicator: data.map(function(d) { return { name: d.domain, max: maxCount }; }),
+      center: ['50%', '55%'],
+      radius: '70%',
+      axisName: { color: '#ccc', fontSize: 11 }
+    },
+    series: [{
+      type: 'radar',
+      data: [{ value: data.map(function(d) { return d.count; }), name: 'Article Count', areaStyle: { color: 'rgba(0,212,255,0.2)' }, lineStyle: { color: '#00d4ff' }, itemStyle: { color: '#00d4ff' } }]
+    }]
+  });
+}
+
+function renderNetworkChart(data) {
+  var container = document.getElementById('chart-network');
+  if (!data || !data.nodes || !data.nodes.length) {
+    container.innerHTML = '<div style="text-align:center;padding:100px;color:#888">No entity relationship data available</div>';
+    return;
+  }
+  var width = container.clientWidth;
+  var height = 420;
+  var svg = d3.select('#chart-network').append('svg').attr('width', width).attr('height', height);
+
+  var nodes = data.nodes.map(function(d) {
+    return Object.assign({}, d, { radius: Math.max(8, Math.min(30, (d.weight || 1) * 5)) });
+  });
+  var links = (data.edges || []).map(function(d) {
+    return { source: d.source, target: d.target, relation: d.relation, strength: d.strength };
+  });
+
+  var simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
+    .force('charge', d3.forceManyBody().strength(-200))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(function(d) { return d.radius + 2; }));
+
+  var link = svg.append('g').selectAll('line').data(links).join('line')
+    .attr('stroke', '#2a2a4a').attr('stroke-width', function(d) { return Math.max(1, d.strength * 3); });
+
+  var node = svg.append('g').selectAll('circle').data(nodes).join('circle')
+    .attr('r', function(d) { return d.radius; }).attr('fill', '#00d4ff').attr('opacity', 0.8)
+    .call(d3.drag()
+      .on('start', function(e, d) { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', function(e, d) { d.fx = e.x; d.fy = e.y; })
+      .on('end', function(e, d) { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }));
+
+  var label = svg.append('g').selectAll('text').data(nodes).join('text')
+    .text(function(d) { return d.id; }).attr('font-size', 10).attr('fill', '#ccc').attr('text-anchor', 'middle').attr('dy', function(d) { return d.radius + 12; });
+
+  simulation.on('tick', function() {
+    link.attr('x1', function(d) { return d.source.x; }).attr('y1', function(d) { return d.source.y; })
+      .attr('x2', function(d) { return d.target.x; }).attr('y2', function(d) { return d.target.y; });
+    node.attr('cx', function(d) { return d.x; }).attr('cy', function(d) { return d.y; });
+    label.attr('x', function(d) { return d.x; }).attr('y', function(d) { return d.y; });
+  });
+
+  var relationTypes = [];
+  links.forEach(function(l) { if (relationTypes.indexOf(l.relation) === -1) relationTypes.push(l.relation); });
+  var legend = svg.append('g').attr('transform', 'translate(10, ' + (height - 20 - relationTypes.length * 20) + ')');
+  relationTypes.forEach(function(rel, i) {
+    legend.append('rect').attr('x', 0).attr('y', i * 20).attr('width', 12).attr('height', 12).attr('fill', '#00d4ff').attr('opacity', 0.6);
+    legend.append('text').attr('x', 18).attr('y', i * 20 + 10).text(rel.replace(/_/g, ' ')).attr('fill', '#888').attr('font-size', 10);
+  });
+}
+
+function renderTrends(trends) {
+  if (!trends) return;
+  document.getElementById('trend-section').innerHTML =
+    '<h3>Trend Analysis</h3>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">' +
+    '<div><span class="trend-dim">Technology</span><p style="margin-top:6px;font-size:13px">' + (trends.technology || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">Application</span><p style="margin-top:6px;font-size:13px">' + (trends.application || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">Policy</span><p style="margin-top:6px;font-size:13px">' + (trends.policy || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">Capital</span><p style="margin-top:6px;font-size:13px">' + (trends.capital || 'N/A') + '</p></div>' +
+    '</div>';
+}
+
+function renderRiskOppTable(items) {
+  if (!items || !items.length) return;
+  var html = '';
+  items.forEach(function(item) {
+    var typeBadge = item.type === 'risk'
+      ? '<span class="badge badge-risk">RISK</span>'
+      : '<span class="badge badge-opportunity">OPPORTUNITY</span>';
+    var levelClass = (item.severity || item.potential || 'medium');
+    var levelBadge = '<span class="badge badge-' + levelClass + '">' + levelClass.toUpperCase() + '</span>';
+    html += '<tr><td>' + typeBadge + '</td><td>' + item.title + '</td><td>' + levelBadge + '</td><td>' + item.description + '</td></tr>';
+  });
+  document.querySelector('#risk-opp-table tbody').innerHTML = html;
+}
+</script>
+</body>
+</html>
