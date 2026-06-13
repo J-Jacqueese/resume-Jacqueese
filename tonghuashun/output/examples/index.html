@@ -8,53 +8,43 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
 :root {
-  --bg: #0f0f1a;
-  --card-bg: #1a1a2e;
-  --border: #2a2a4a;
-  --text: #e0e0e0;
-  --text-dim: #888;
-  --accent: #00d4ff;
-  --positive: #4caf50;
-  --negative: #f44336;
-  --neutral: #ff9800;
-  --warning: #ffd93d;
+  --bg: #0f0f1a; --card-bg: #1a1a2e; --border: #2a2a4a;
+  --text: #e0e0e0; --text-dim: #888;
+  --accent: #00d4ff; --positive: #4caf50; --negative: #f44336;
+  --neutral: #ff9800; --warning: #ffd93d;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  padding: 24px;
-  line-height: 1.5;
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  padding: 24px; line-height: 1.5;
 }
 .header {
-  text-align: center;
-  margin-bottom: 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
 }
 .header h1 {
   font-size: 28px;
   background: linear-gradient(135deg, var(--accent), #7c4dff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.header .date {
-  color: var(--text-dim);
-  font-size: 14px;
-  margin-top: 4px;
+.header .date { color: var(--text-dim); font-size: 14px; }
+.lang-toggle {
+  display: flex; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
 }
+.lang-toggle button {
+  padding: 6px 14px; border: none; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: var(--card-bg); color: var(--text-dim); transition: all 0.2s;
+}
+.lang-toggle button.active { background: var(--accent); color: var(--bg); }
+.lang-toggle button:hover:not(.active) { color: var(--text); }
 .overview-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; margin-bottom: 24px;
 }
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; text-align: center;
 }
 .card .number { font-size: 36px; font-weight: 700; }
 .card .label { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
@@ -64,45 +54,39 @@ body {
 .card .number.negative { color: var(--negative); }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 .chart-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
 }
-.chart-card h3 {
-  font-size: 15px;
-  margin-bottom: 12px;
-  color: var(--text);
-}
+.chart-card h3 { font-size: 15px; margin-bottom: 12px; color: var(--text); }
 .chart { width: 100%; height: 320px; }
 .chart-lg { width: 100%; height: 420px; }
 .hot-topics { margin-bottom: 24px; }
 .hot-topic-item {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 12px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 12px;
 }
 .hot-topic-item .rank {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--bg);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 2px 10px;
-  border-radius: 20px;
-  margin-right: 12px;
+  display: inline-block; background: var(--accent); color: var(--bg);
+  font-weight: 700; font-size: 14px; padding: 2px 10px; border-radius: 20px; margin-right: 12px;
 }
 .hot-topic-item h4 { display: inline; font-size: 17px; }
 .hot-topic-item .meta { color: var(--text-dim); font-size: 13px; margin: 8px 0; }
 .hot-topic-item p { font-size: 14px; margin-top: 8px; color: #ccc; }
+.source-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.source-links .source-label { font-size: 12px; color: var(--text-dim); margin-right: 4px; display: flex; align-items: center; }
+.source-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 500;
+  text-decoration: none; transition: all 0.2s;
+  background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2);
+}
+.source-badge:hover { background: rgba(0,212,255,0.2); border-color: var(--accent); }
+.source-badge.zh { background: rgba(124,77,255,0.1); color: #b39ddb; border: 1px solid rgba(124,77,255,0.2); }
+.source-badge.zh:hover { background: rgba(124,77,255,0.2); border-color: #7c4dff; }
+.source-badge .arrow { font-size: 10px; opacity: 0.7; }
 .trend-section {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 16px;
 }
 .trend-section h3 { margin-bottom: 8px; }
 .trend-dim { display: inline-block; background: #2a2a4a; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 8px; }
@@ -116,94 +100,153 @@ body {
 .badge-medium { background: rgba(255,152,0,0.15); color: var(--neutral); }
 .badge-low { background: rgba(76,175,80,0.15); color: var(--positive); }
 footer { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
-@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .header { flex-direction: column; text-align: center; } }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>AI Daily Insight Dashboard</h1>
-  <div class="date" id="report-date">Loading...</div>
+  <div>
+    <h1 id="page-title">🤖 AI 舆情洞察日报</h1>
+    <div class="date" id="report-date">Loading...</div>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-zh" onclick="switchLang('zh')">中文</button>
+    <button id="btn-en" onclick="switchLang('en')">EN</button>
+  </div>
 </div>
 
 <div class="overview-cards" id="overview-cards"></div>
-
 <div class="hot-topics" id="hot-topics"></div>
 
 <div class="grid-2">
-  <div class="chart-card"><h3>Category Distribution</h3><div class="chart" id="chart-category"></div></div>
-  <div class="chart-card"><h3>Sentiment Analysis</h3><div class="chart" id="chart-sentiment"></div></div>
+  <div class="chart-card"><h3 id="title-category">📊 分类分布</h3><div class="chart" id="chart-category"></div></div>
+  <div class="chart-card"><h3 id="title-sentiment">🎭 情感分析</h3><div class="chart" id="chart-sentiment"></div></div>
 </div>
 
 <div class="grid-2">
-  <div class="chart-card"><h3>Impact Ranking (Top 10)</h3><div class="chart" id="chart-impact"></div></div>
-  <div class="chart-card"><h3>AI Domain Radar</h3><div class="chart" id="chart-radar"></div></div>
+  <div class="chart-card"><h3 id="title-impact">📈 影响力排名 (Top 10)</h3><div class="chart" id="chart-impact"></div></div>
+  <div class="chart-card"><h3 id="title-radar">🎯 AI 领域雷达</h3><div class="chart" id="chart-radar"></div></div>
 </div>
 
 <div class="chart-card" style="margin-bottom:16px">
-  <h3>Entity Relationship Network</h3>
+  <h3 id="title-network">🔗 实体关系网络</h3>
   <div class="chart-lg" id="chart-network"></div>
 </div>
 
 <div class="trend-section" id="trend-section"></div>
 
 <div class="chart-card" style="margin-bottom:16px">
-  <h3>Risk & Opportunity Radar</h3>
+  <h3 id="title-risk">⚠️ 风险与机会</h3>
   <table class="risk-opp-table" id="risk-opp-table">
-    <thead><tr><th>Type</th><th>Title</th><th>Level</th><th>Description</th></tr></thead>
+    <thead><tr><th id="th-type">类型</th><th id="th-title">标题</th><th id="th-level">级别</th><th id="th-desc">描述</th></tr></thead>
     <tbody></tbody>
   </table>
 </div>
 
-<footer>Generated by AI Daily Insight Engine &middot; Data: TechCrunch, The Verge, Hacker News, jiqizhixin, QbitAI, 36kr</footer>
+<footer id="footer-text">由 AI Daily Insight Engine 生成</footer>
 
 <script>
-// Embedded dashboard data — no fetch() needed, works offline
-const DASHBOARD_DATA = {"metadata": {"generated_at": "2026-06-13T10:12:13.189705+00:00", "report_date": "2026-06-13", "total_articles": 15}, "overview": {"total_articles": 15, "hot_topics_count": 5, "risks_count": 4, "opportunities_count": 2}, "hot_topics": [{"rank": 1, "title": "AI Compute Infrastructure Arms Race Reaches Unprecedented Scale", "insight_ids": ["insight-5", "insight-2", "insight-10", "insight-3"], "magnitude": 5, "summary": "The AI industry is witnessing an infrastructure buildout of historic proportions. Google committed $920M/month to SpaceX for AI compute through 2029—one of the largest cloud contracts ever signed. Prometheus raised $12B at a $41B valuation to build physical-world AI, backed by Wall Street giants JPMorgan, Goldman Sachs, and BlackRock. Apple, despite its silicon independence ethos, revealed at WWDC 2026 that its Private Cloud Compute runs on Nvidia GPUs within Google Cloud. Broadcom projected $560B in AI chip revenue for fiscal 2026. These signals collectively indicate that AI compute demand is far outstripping supply, driving unconventional partnerships and capital flows at a scale previously unseen in tech history.", "key_players": ["Google", "SpaceX", "Prometheus", "Nvidia", "Apple", "Broadcom", "JPMorgan Chase", "Goldman Sachs", "BlackRock"], "category": "infrastructure"}, {"rank": 2, "title": "Frontier AI Safety and Governance Crisis: Bans, Benchmarks, and Recursive Self-Improvement", "insight_ids": ["insight-15", "insight-6", "insight-13", "insight-8"], "magnitude": 5, "summary": "A convergence of events has thrust AI safety and governance into crisis. The Trump administration banned all foreign access to Claude Fable 5 and Mythos 5 under national security powers, marking the first-ever export control on AI models themselves. Simultaneously, UC Berkeley's ALE benchmark revealed Claude Fable 5 scored 0% on its hardest tier (vs. GPT-5.5's 24% at one-quarter the cost), and Anthropic was forced to apologize for secretly degrading response quality when it detected AI R&D activity. Compounding these concerns, Recursive Superintelligence (founded by 田渊栋, valued at $4.65B) demonstrated automated AI research that achieved SOTA on three benchmarks—realizing the very recursive self-improvement scenario Anthropic had warned about. A Chinese research team further demonstrated they could bypass Fable 5's strongest safety mechanisms in a single conversation.", "key_players": ["US Government", "Anthropic", "OpenAI", "Recursive Superintelligence", "UC Berkeley", "田渊栋"], "category": "safety_governance"}, {"rank": 3, "title": "AI Subscription Price War Erupts as Commoditization Accelerates", "insight_ids": ["insight-1", "insight-7"], "magnitude": 3, "summary": "Google slashed Google AI Plus pricing from $7.99 to $4.99 per month while doubling storage to 400GB, bringing the AI subscription price war—previously confined to emerging markets like India—directly to US consumers. This aggressive move intensifies commoditization pressure on OpenAI and Anthropic, both of which have confidentially filed for IPO. Meanwhile, Uber imposed a $1,500/month per-employee cap on AI coding tools, analyzed by Simon Willison as a bellwether for enterprise AI pricing economics. The HN community remains split on whether this signals disciplined cost management or fundamental uncertainty about AI tool ROI.", "key_players": ["Google", "OpenAI", "Anthropic", "Uber", "Simon Willison"], "category": "market_dynamics"}, {"rank": 4, "title": "Enterprise AI Labor Revolt: Meta's 'Soul-Crushing Gulag' Exposes Human Cost of AI Development", "insight_ids": ["insight-9"], "magnitude": 4, "summary": "Meta's three-month-old Applied AI division of approximately 6,500 engineers is on the verge of open revolt. Employees describe involuntary 'drafting' into the unit as entering a 'soul-crushing gulag' where they generate puzzles for AI training. A livestreamed internal presentation was hijacked by profane outbursts from staff. Over 1,600 employees signed a petition against keystroke and click monitoring used to collect AI training data. CEO Mark Zuckerberg acknowledged the 'distress' in an internal memo but stood firm on the program's importance. This is the most visible and volatile instance of labor pushback against AI development practices at a major tech company, raising questions about sustainable AI workforce strategies.", "key_players": ["Meta", "Mark Zuckerberg"], "category": "labor_relations"}, {"rank": 5, "title": "China's AI Research Reaches Inflection Point with World-First Foundation Models", "insight_ids": ["insight-12"], "magnitude": 4, "summary": "The 2026 BAAI Conference (智源大会) in Beijing marked a pivotal moment for Chinese AI research. BAAI released the 悟界 (Wujie) model family, including Physis-v0.1 (the world's first general-purpose world foundation model supporting 50+ complex physical scenarios), RoboBrain Orca (a vision-thought-action unified embodied AI brain), and Emu3.5—which became the first Chinese-led large model research published in Nature. Two Turing Award laureates (Whitfield Diffie and Andrew Barto) keynoted the event. FlagOS 2.1 demonstrated interoperability across 18 chip vendors and 32 chip models, addressing China's heterogeneous AI hardware landscape. These releases signal China's transition from 'following' to 'co-leading' in frontier AI research.", "key_players": ["BAAI (智源研究院)", "黄铁军", "王坚", "Whitfield Diffie", "Andrew Barto"], "category": "research_leadership"}], "sentiment_distribution": {"positive": 5, "neutral": 5, "negative": 5}, "category_distribution": [{"category": "research", "count": 4}, {"category": "other", "count": 3}, {"category": "product_launch", "count": 2}, {"category": "funding", "count": 2}, {"category": "partnership", "count": 2}, {"category": "acquisition", "count": 1}, {"category": "policy", "count": 1}], "domain_radar": [{"domain": "LLM", "count": 7}, {"domain": "CV", "count": 0}, {"domain": "Robotics", "count": 2}, {"domain": "Policy", "count": 2}, {"domain": "Capital", "count": 1}, {"domain": "Application", "count": 8}], "entity_network": {"nodes": [{"id": "Google", "group": "organization", "weight": 5}, {"id": "Anthropic", "group": "organization", "weight": 4}, {"id": "OpenAI", "group": "organization", "weight": 3}, {"id": "Prometheus", "group": "organization", "weight": 1}, {"id": "JPMorgan Chase", "group": "organization", "weight": 1}, {"id": "Goldman Sachs", "group": "organization", "weight": 1}, {"id": "BlackRock", "group": "organization", "weight": 1}, {"id": "Microsoft", "group": "organization", "weight": 1}, {"id": "Broadcom", "group": "organization", "weight": 1}, {"id": "Sensor Tower", "group": "organization", "weight": 1}, {"id": "SpaceX", "group": "organization", "weight": 1}, {"id": "UC Berkeley", "group": "organization", "weight": 1}, {"id": "Uber", "group": "organization", "weight": 1}, {"id": "Meta", "group": "organization", "weight": 1}, {"id": "Apple", "group": "organization", "weight": 1}], "edges": [{"source": "google", "target": "openai", "relation": "price_competition", "strength": 0.5}, {"source": "google", "target": "anthropic", "relation": "price_competition", "strength": 0.5}, {"source": "google", "target": "spacex", "relation": "compute_partnership", "strength": 0.5}, {"source": "microsoft", "target": "openai", "relation": "model_competition", "strength": 0.5}, {"source": "microsoft", "target": "google", "relation": "model_competition", "strength": 0.5}, {"source": "apple", "target": "nvidia", "relation": "hardware_dependency", "strength": 0.5}, {"source": "apple", "target": "google", "relation": "cloud_partnership", "strength": 0.5}, {"source": "nvidia", "target": "google", "relation": "hardware_supplier", "strength": 0.5}, {"source": "prometheus", "target": "nvidia", "relation": "hardware_dependency", "strength": 0.5}, {"source": "us_gov", "target": "anthropic", "relation": "export_control", "strength": 0.5}, {"source": "anthropic", "target": "recursive_si", "relation": "warning_about", "strength": 0.5}, {"source": "uc_berkeley", "target": "anthropic", "relation": "benchmark_evaluation", "strength": 0.5}, {"source": "uc_berkeley", "target": "openai", "relation": "benchmark_evaluation", "strength": 0.5}, {"source": "meta", "target": "openai", "relation": "talent_competition", "strength": 0.5}, {"source": "uber", "target": "openai", "relation": "enterprise_customer", "strength": 0.5}, {"source": "uber", "target": "anthropic", "relation": "enterprise_customer", "strength": 0.5}, {"source": "warner_music", "target": "openai", "relation": "copyright_tension", "strength": 0.5}, {"source": "baai", "target": "openai", "relation": "research_competition", "strength": 0.5}, {"source": "baai", "target": "google", "relation": "research_competition", "strength": 0.5}], "clusters": [{"id": "compute_arms_race", "label": "Compute Infrastructure Arms Race", "node_ids": ["google", "spacex", "nvidia", "apple", "prometheus"]}, {"id": "safety_governance", "label": "Safety & Governance Crisis", "node_ids": ["anthropic", "us_gov", "recursive_si", "uc_berkeley"]}, {"id": "market_competition", "label": "Market Competition", "node_ids": ["google", "microsoft", "openai", "uber"]}, {"id": "china_ai_rise", "label": "China AI Ascendancy", "node_ids": ["baai", "openai", "google"]}]}, "impact_ranking": [{"id": "insight-2", "title": "insight-2", "category": "funding", "magnitude": 5, "scope": "global"}, {"id": "insight-15", "title": "insight-15", "category": "policy", "magnitude": 5, "scope": "global"}, {"id": "insight-3", "title": "insight-3", "category": "product_launch", "magnitude": 4, "scope": "industry"}, {"id": "insight-4", "title": "insight-4", "category": "other", "magnitude": 4, "scope": "global"}, {"id": "insight-5", "title": "insight-5", "category": "partnership", "magnitude": 4, "scope": "industry"}, {"id": "insight-8", "title": "insight-8", "category": "research", "magnitude": 4, "scope": "global"}, {"id": "insight-12", "title": "insight-12", "category": "research", "magnitude": 4, "scope": "regional"}, {"id": "insight-13", "title": "insight-13", "category": "funding", "magnitude": 4, "scope": "global"}, {"id": "insight-1", "title": "insight-1", "category": "product_launch", "magnitude": 3, "scope": "industry"}, {"id": "insight-6", "title": "insight-6", "category": "research", "magnitude": 3, "scope": "industry"}], "trend_summary": {"technology": "AI model architectures are diversifying rapidly beyond autoregressive transformers. Google's open-source DiffusionGemma (26B MoE, 1000+ tokens/sec on H100 with only 3.8B active parameters) represents a breakthrough in non-autoregressive text generation, while Gemma 4 12B explores encoder-free multimodal design. Microsoft's MAI-Thinking-1 brings reasoning capabilities to its self-developed model line, and BAAI's Physis-v0.1 establishes a new category of world foundation models for long-horizon physical reasoning. The simultaneous emergence of these architectural innovations suggests the field is entering a post-transformer exploration phase, with efficiency and domain specialization overtaking pure scale as the primary research frontier.", "application": "AI agents are becoming the dominant application paradigm across the industry. Microsoft CEO Satya Nadella declared the 'Agent-first era' at Build 2026, positioning AI agents as the primary computing interface. OpenAI Codex reached 5M weekly active users with new plugins enabling hosted website generation—blurring the line between development tools and application platforms. On the enterprise side, AI coding tools face growing scrutiny over ROI, exemplified by Uber's $1,500/month cap per employee. In the physical world, Prometheus's $12B raise to build an 'artificial general engineer' targeting jet engines and drug compounds signals that AI application is expanding from pure software into complex physical engineering domains.", "policy": "AI governance has entered an unprecedented phase of direct government intervention. The US government's ban on foreign access to Claude Fable 5 and Mythos 5—treating AI models like advanced weapons or chips under export control law—establishes a new and potentially destabilizing precedent. This move risks fragmenting the global AI ecosystem into isolated national spheres, with Chinese researchers already demonstrating they can bypass such controls technically. Simultaneously, the Warner Music Group acquisition of Sureel AI highlights the intensifying copyright and attribution conflict between creative industries and AI companies, suggesting that intellectual property law will be a major AI policy battleground in the coming year.", "capital": "AI capital markets are characterized by extreme concentration at the top and growing skepticism at the margins. Prometheus's $12B raise at a $41B valuation, backed by Wall Street's biggest names (JPMorgan, Goldman Sachs, BlackRock), shows that mega-rounds for ambitious physical AI plays remain accessible. However, Google's price cuts and Uber's cost caps signal that the AI subscription and enterprise tool markets are experiencing commoditization pressure just as OpenAI and Anthropic prepare for IPO. The Google-SpaceX $920M/month compute deal—a 33-month commitment totaling approximately $30B—demonstrates that AI infrastructure is attracting capital commitments typically associated with energy or telecommunications projects, not software."}, "risk_opportunities": [{"type": "risk", "title": "AI Export Controls Fragmenting Global AI Ecosystem", "description": "The US ban on foreign access to frontier AI models (Claude Fable 5, Mythos 5) risks splitting global AI development into isolated and potentially hostile national blocs. With Chinese teams already demonstrating they can bypass such controls, the policy may accelerate independent Chinese AI capability while degrading international safety cooperation precisely when it is most needed.", "severity": "high"}, {"type": "risk", "title": "Recursive Self-Improvement Outpacing Safety Infrastructure", "description": "Recursive Superintelligence's demonstration of autonomous AI research achieving SOTA benchmarks, combined with Anthropic's own disclosure that AI writes substantial portions of its code and the revelation of secret quality degradation (the Fable 5 incident), indicates that recursive self-improvement is transitioning from theoretical risk to operational reality. Current safety and oversight mechanisms appear insufficient for this trajectory.", "severity": "high"}, {"type": "risk", "title": "Enterprise AI Labor Backlash Threatening Development Velocity", "description": "Meta's Applied AI team revolt—with 1,600+ employees petitioning against surveillance practices and engineers comparing the unit to a 'gulag'—is the most visible instance of AI workforce resistance. If this pattern spreads across the industry, it could significantly slow AI development, particularly the human-generated training data pipelines that frontier models depend on.", "severity": "medium"}, {"type": "risk", "title": "AI Commoditization Pressuring Pre-IPO Valuations", "description": "With Google aggressively cutting consumer AI prices (50% reduction), Uber capping enterprise AI spend, and commoditization pressure mounting across both consumer and enterprise segments, OpenAI and Anthropic—both having confidentially filed for IPO—face the risk of public market repricing if subscription and API revenue growth decelerates.", "severity": "medium"}, {"type": "opportunity", "title": "AI Infrastructure Investment Supercycle", "description": "The Google-SpaceX $920M/month deal and Broadcom's $560B AI chip revenue forecast indicate that AI infrastructure demand will outstrip supply for years. This creates massive opportunities for hardware vendors, cloud providers, and alternative compute providers (satellite, edge, specialized data centers). Companies positioned in the AI infrastructure layer may capture more value than application-layer companies in the near term.", "potential": "high"}, {"type": "opportunity", "title": "Open-Source and Non-Autoregressive Models Enabling New Applications", "description": "Google's open-source DiffusionGemma (Apache 2.0, 1000+ tokens/sec on commodity hardware) and the encoder-free Gemma 4 architecture open the door to AI applications that were previously infeasible due to cost or latency constraints—real-time on-device AI, embedded systems, and privacy-sensitive deployments. Companies that build on these architectures early may gain significant advantage.", "potential": "medium"}]};
-(function(data) {
-    renderOverview(data.overview);
-    renderHotTopics(data.hot_topics);
-    renderCategoryChart(data.category_distribution);
-    renderSentimentChart(data.sentiment_distribution);
-    renderImpactChart(data.impact_ranking);
-    renderRadarChart(data.domain_radar);
-    renderNetworkChart(data.entity_network);
-    renderTrends(data.trend_summary);
-    renderRiskOppTable(data.risk_opportunities);
-    document.getElementById('report-date').textContent = 'Report Date: ' + data.metadata.report_date;
-})(DASHBOARD_DATA);
+// ── Embedded dashboard data (generated by enrichment pipeline) ──
+DASHBOARD_DATA_PLACEHOLDER
+
+// ── i18n ──
+var currentLang = (function() {
+  var saved = localStorage.getItem('dashboard-lang');
+  return saved === 'en' ? 'en' : 'zh';
+})();
+
+function t(key) {
+  var map = DASHBOARD_DATA.i18n[currentLang];
+  return map[key] || key;
+}
+
+function switchLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('dashboard-lang', lang);
+  document.getElementById('btn-zh').className = lang === 'zh' ? 'active' : '';
+  document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
+  refreshUI();
+}
+
+function refreshUI() {
+  // Update all translatable elements
+  document.getElementById('page-title').textContent = t('title');
+  document.getElementById('title-category').textContent = t('category_distribution');
+  document.getElementById('title-sentiment').textContent = t('sentiment_analysis');
+  document.getElementById('title-impact').textContent = t('impact_ranking');
+  document.getElementById('title-radar').textContent = t('ai_domain_radar');
+  document.getElementById('title-network').textContent = t('entity_network');
+  document.getElementById('title-risk').textContent = t('risk_opp_radar');
+  document.getElementById('th-type').textContent = t('type');
+  document.getElementById('th-title').textContent = t('title_col');
+  document.getElementById('th-level').textContent = t('level');
+  document.getElementById('th-desc').textContent = t('description');
+  document.getElementById('footer-text').textContent = t('footer');
+  document.getElementById('report-date').textContent = t('report_date') + ': ' + DASHBOARD_DATA.metadata.report_date;
+
+  // Re-render data-driven content
+  renderOverview(DASHBOARD_DATA.overview);
+  renderHotTopics(DASHBOARD_DATA.hot_topics);
+  renderCategoryChart(DASHBOARD_DATA.category_distribution);
+  renderSentimentChart(DASHBOARD_DATA.sentiment_distribution);
+  renderImpactChart(DASHBOARD_DATA.impact_ranking);
+  renderRadarChart(DASHBOARD_DATA.domain_radar);
+  renderNetworkChart(DASHBOARD_DATA.entity_network);
+  renderTrends(DASHBOARD_DATA.trend_summary);
+  renderRiskOppTable(DASHBOARD_DATA.risk_opportunities);
+}
+
+// ── Render functions ──
 
 function renderOverview(ov) {
   if (!ov) return;
   document.getElementById('overview-cards').innerHTML =
-    '<div class="card"><div class="number accent">' + (ov.total_articles || 0) + '</div><div class="label">Articles Analyzed</div></div>' +
-    '<div class="card"><div class="number warning">' + (ov.hot_topics_count || 0) + '</div><div class="label">Hot Topics</div></div>' +
-    '<div class="card"><div class="number negative">' + (ov.risks_count || 0) + '</div><div class="label">Risks Identified</div></div>' +
-    '<div class="card"><div class="number positive">' + (ov.opportunities_count || 0) + '</div><div class="label">Opportunities Found</div></div>';
+    '<div class="card"><div class="number accent">' + (ov.total_articles || 0) + '</div><div class="label">' + t('articles_analyzed') + '</div></div>' +
+    '<div class="card"><div class="number warning">' + (ov.hot_topics_count || 0) + '</div><div class="label">' + t('hot_topics') + '</div></div>' +
+    '<div class="card"><div class="number negative">' + (ov.risks_count || 0) + '</div><div class="label">' + t('risks_identified') + '</div></div>' +
+    '<div class="card"><div class="number positive">' + (ov.opportunities_count || 0) + '</div><div class="label">' + t('opportunities_found') + '</div></div>';
 }
 
 function renderHotTopics(topics) {
   if (!topics || !topics.length) return;
-  var html = '<h2 style="margin-bottom:16px">Today\'s Top Stories</h2>';
-  topics.forEach(function(t) {
+  var html = '<h2 style="margin-bottom:16px">' + t('todays_top_stories') + '</h2>';
+  topics.forEach(function(topic) {
+    // Source links
+    var sourcesHtml = '';
+    if (topic.sources && topic.sources.length) {
+      sourcesHtml = '<div class="source-links"><span class="source-label">' + t('sources') + ':</span>';
+      topic.sources.forEach(function(s) {
+        var zhClass = s.lang === 'zh' ? ' zh' : '';
+        sourcesHtml += '<a class="source-badge' + zhClass + '" href="' + s.url + '" target="_blank" rel="noopener" title="' + s.title + '">' +
+          s.name + ' <span class="arrow">↗</span></a>';
+      });
+      sourcesHtml += '</div>';
+    }
+
     html += '<div class="hot-topic-item">' +
-      '<span class="rank">#' + t.rank + '</span>' +
-      '<h4>' + t.title + '</h4>' +
-      '<div class="meta">Impact: ' + '<span>&#11088;</span>'.repeat(t.magnitude || 1) + ' &middot; ' + (t.category || '') + ' &middot; ' + ((t.key_players || []).join(', ')) + '</div>' +
-      '<p>' + t.summary + '</p>' +
+      '<span class="rank">#' + topic.rank + '</span>' +
+      '<h4>' + topic.title + '</h4>' +
+      '<div class="meta">' + t('impact') + ': ' + repeatStr('⭐', topic.magnitude || 1) + ' &middot; ' + (topic.category || '') + ' &middot; ' + ((topic.key_players || []).join(', ')) + '</div>' +
+      '<p>' + topic.summary + '</p>' +
+      sourcesHtml +
       '</div>';
   });
   document.getElementById('hot-topics').innerHTML = html;
 }
 
+function repeatStr(str, count) {
+  return Array(count + 1).join(str);
+}
+
 function renderCategoryChart(data) {
+  var dom = document.getElementById('chart-category');
   if (!data || !data.length) return;
-  var chart = echarts.init(document.getElementById('chart-category'));
+  var chart = echarts.init(dom);
   chart.setOption({
     tooltip: { trigger: 'item' },
     series: [{
-      type: 'pie',
-      radius: ['45%', '75%'],
+      type: 'pie', radius: ['45%', '75%'],
       itemStyle: { borderRadius: 6, borderColor: '#0f0f1a', borderWidth: 3 },
       label: { color: '#888', fontSize: 12 },
       data: data.map(function(d) { return { name: d.category, value: d.count }; })
@@ -216,7 +259,7 @@ function renderSentimentChart(data) {
   var chart = echarts.init(document.getElementById('chart-sentiment'));
   chart.setOption({
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: ['Positive', 'Neutral', 'Negative'], axisLabel: { color: '#888' } },
+    xAxis: { type: 'category', data: [t('positive'), t('neutral'), t('negative')], axisLabel: { color: '#888' } },
     yAxis: { type: 'value', axisLabel: { color: '#888' } },
     series: [{
       type: 'bar',
@@ -234,10 +277,18 @@ function renderImpactChart(data) {
   if (!data || !data.length) return;
   var chart = echarts.init(document.getElementById('chart-impact'));
   chart.setOption({
-    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        var d = params[0];
+        var item = data[data.length - 1 - d.dataIndex];
+        var label = item ? (item.article_title || item.source_name || '') : '';
+        return label ? label + '<br/>' + t('impact') + ': ' + d.value : t('impact') + ': ' + d.value;
+      }
+    },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: { type: 'value', max: 5, axisLabel: { color: '#888' } },
-    yAxis: { type: 'category', data: data.map(function(d) { return d.title; }).reverse(), axisLabel: { color: '#ccc', fontSize: 11, width: 120, overflow: 'truncate' } },
+    yAxis: { type: 'category', data: data.map(function(d) { return (d.article_title || d.id).substring(0, 40); }).reverse(), axisLabel: { color: '#ccc', fontSize: 11, width: 140, overflow: 'truncate' } },
     series: [{
       type: 'bar',
       data: data.map(function(d) {
@@ -246,6 +297,13 @@ function renderImpactChart(data) {
       barWidth: '60%',
       label: { show: true, position: 'right', color: '#888' }
     }]
+  });
+  // Click handler to open source URL
+  chart.on('click', function(params) {
+    var idx = data.length - 1 - params.dataIndex;
+    if (idx >= 0 && data[idx].source_url) {
+      window.open(data[idx].source_url, '_blank');
+    }
   });
 }
 
@@ -256,8 +314,7 @@ function renderRadarChart(data) {
   chart.setOption({
     radar: {
       indicator: data.map(function(d) { return { name: d.domain, max: maxCount }; }),
-      center: ['50%', '55%'],
-      radius: '70%',
+      center: ['50%', '55%'], radius: '70%',
       axisName: { color: '#ccc', fontSize: 11 }
     },
     series: [{
@@ -269,8 +326,10 @@ function renderRadarChart(data) {
 
 function renderNetworkChart(data) {
   var container = document.getElementById('chart-network');
+  // Clear previous SVG
+  container.innerHTML = '';
   if (!data || !data.nodes || !data.nodes.length) {
-    container.innerHTML = '<div style="text-align:center;padding:100px;color:#888">No entity relationship data available</div>';
+    container.innerHTML = '<div style="text-align:center;padding:100px;color:#888">' + t('no_entity_data') + '</div>';
     return;
   }
   var width = container.clientWidth;
@@ -322,12 +381,12 @@ function renderNetworkChart(data) {
 function renderTrends(trends) {
   if (!trends) return;
   document.getElementById('trend-section').innerHTML =
-    '<h3>Trend Analysis</h3>' +
+    '<h3>' + t('trend_analysis') + '</h3>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">' +
-    '<div><span class="trend-dim">Technology</span><p style="margin-top:6px;font-size:13px">' + (trends.technology || 'N/A') + '</p></div>' +
-    '<div><span class="trend-dim">Application</span><p style="margin-top:6px;font-size:13px">' + (trends.application || 'N/A') + '</p></div>' +
-    '<div><span class="trend-dim">Policy</span><p style="margin-top:6px;font-size:13px">' + (trends.policy || 'N/A') + '</p></div>' +
-    '<div><span class="trend-dim">Capital</span><p style="margin-top:6px;font-size:13px">' + (trends.capital || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">' + t('technology') + '</span><p style="margin-top:6px;font-size:13px">' + (trends.technology || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">' + t('application') + '</span><p style="margin-top:6px;font-size:13px">' + (trends.application || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">' + t('policy') + '</span><p style="margin-top:6px;font-size:13px">' + (trends.policy || 'N/A') + '</p></div>' +
+    '<div><span class="trend-dim">' + t('capital') + '</span><p style="margin-top:6px;font-size:13px">' + (trends.capital || 'N/A') + '</p></div>' +
     '</div>';
 }
 
@@ -335,15 +394,25 @@ function renderRiskOppTable(items) {
   if (!items || !items.length) return;
   var html = '';
   items.forEach(function(item) {
+    var typeLabel = item.type === 'risk' ? t('risk') : t('opportunity');
     var typeBadge = item.type === 'risk'
-      ? '<span class="badge badge-risk">RISK</span>'
-      : '<span class="badge badge-opportunity">OPPORTUNITY</span>';
-    var levelClass = (item.severity || item.potential || 'medium');
-    var levelBadge = '<span class="badge badge-' + levelClass + '">' + levelClass.toUpperCase() + '</span>';
+      ? '<span class="badge badge-risk">' + typeLabel + '</span>'
+      : '<span class="badge badge-opportunity">' + typeLabel + '</span>';
+    var level = item.severity || item.potential || 'medium';
+    var levelLabel = level === 'high' ? t('high') : level === 'medium' ? t('medium') : t('low');
+    var levelBadge = '<span class="badge badge-' + level + '">' + levelLabel + '</span>';
     html += '<tr><td>' + typeBadge + '</td><td>' + item.title + '</td><td>' + levelBadge + '</td><td>' + item.description + '</td></tr>';
   });
   document.querySelector('#risk-opp-table tbody').innerHTML = html;
 }
+
+// ── Init ──
+(function(data) {
+  // Set initial language button states
+  document.getElementById('btn-zh').className = currentLang === 'zh' ? 'active' : '';
+  document.getElementById('btn-en').className = currentLang === 'en' ? 'active' : '';
+  refreshUI();
+})(DASHBOARD_DATA);
 </script>
 </body>
 </html>
