@@ -2,6 +2,7 @@ import { Hero } from "./components/Hero";
 import { CourseOverview } from "./components/CourseOverview";
 import { ComparisonSection } from "./components/ComparisonSection";
 import { VibeCodingIntro } from "./components/VibeCodingIntro";
+import { SuperpowersSection } from "./components/SuperpowersSection";
 import { ProjectBrief } from "./components/ProjectBrief";
 import { StepByStepManual } from "./components/StepByStepManual";
 import { HandoutsSection } from "./components/HandoutsSection";
@@ -13,6 +14,7 @@ const navLinks = [
   { href: "#overview", label: "课程概览" },
   { href: "#comparison", label: "模式对比" },
   { href: "#vibe", label: "Vibe Coding" },
+  { href: "#superpowers", label: "Superpowers" },
   { href: "#project", label: "实验项目" },
   { href: "#manual", label: "实验手册" },
   { href: "#handouts", label: "课程讲义" },
@@ -51,6 +53,7 @@ export default function App() {
         <CourseOverview />
         <ComparisonSection />
         <VibeCodingIntro />
+        <SuperpowersSection />
         <ProjectBrief />
         <StepByStepManual />
         <HandoutsSection />
