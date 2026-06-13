@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { phases, type Skill, type Phase } from "./superpowers/workflowData";
 
 function SkillCard({ skill }: { skill: Skill }) {
   return (
-    <Card className="flex-1 min-w-[220px] max-w-[320px]">
+    <Card className="flex-1 min-w-[260px] max-w-[360px]">
       <CardContent className="flex flex-col gap-2 py-5">
         <Badge variant="secondary" className="w-fit text-xs">
           /{skill.name}
@@ -45,7 +45,7 @@ function PhaseHeader({
         className={`size-5 shrink-0 ${isExpanded ? "text-primary" : "text-muted-foreground"}`}
       />
       <span
-        className={`font-medium ${isExpanded ? "text-primary" : "text-foreground"}`}
+        className={`font-medium text-sm ${isExpanded ? "text-primary" : "text-foreground"}`}
       >
         {phase.label}
       </span>
@@ -59,9 +59,14 @@ function PhaseHeader({
 export function SuperpowersSection() {
   const [expandedKey, setExpandedKey] = useState<string>(phases[0].key);
 
-  const togglePhase = (key: string) => {
-    setExpandedKey((prev) => (prev === key ? prev : key));
+  const selectPhase = (key: string) => {
+    setExpandedKey(key);
   };
+
+  const expandedPhase = useMemo(
+    () => phases.find((p) => p.key === expandedKey) ?? phases[0],
+    [expandedKey],
+  );
 
   return (
     <section id="superpowers" className="max-w-6xl mx-auto px-6 py-16">
@@ -73,40 +78,39 @@ export function SuperpowersSection() {
         </p>
       </div>
 
-      {/* Desktop: horizontal phases with dashed connectors */}
+      {/* Desktop: tab-style — headers in a row, skill cards in full-width area below */}
       <div className="hidden md:block">
-        <div className="flex items-start gap-0">
+        {/* Phase headers row */}
+        <div className="flex items-start">
           {phases.map((phase, index) => {
             const isExpanded = expandedKey === phase.key;
             const isLast = index === phases.length - 1;
 
             return (
-              <div key={phase.key} className="flex items-start flex-1">
-                <div className="flex-1 min-w-0">
-                  <PhaseHeader
-                    phase={phase}
-                    isExpanded={isExpanded}
-                    skillCount={phase.skills.length}
-                    onClick={() => togglePhase(phase.key)}
-                  />
-                  {isExpanded && (
-                    <div className="mt-4 ml-4">
-                      <div className="flex flex-wrap gap-3">
-                        {phase.skills.map((skill) => (
-                          <SkillCard key={skill.name} skill={skill} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <div key={phase.key} className="flex items-start flex-1 min-w-0">
+                <PhaseHeader
+                  phase={phase}
+                  isExpanded={isExpanded}
+                  skillCount={phase.skills.length}
+                  onClick={() => selectPhase(phase.key)}
+                />
                 {!isLast && (
-                  <div className="flex-shrink-0 w-8 flex items-center justify-center pt-6">
+                  <div className="flex-shrink-0 w-6 flex items-center justify-center pt-3">
                     <div className="w-full border-t border-dashed border-border" />
                   </div>
                 )}
               </div>
             );
           })}
+        </div>
+
+        {/* Expanded phase skill cards — full width below headers */}
+        <div className="mt-6 ml-4 pl-4 border-l-[3px] border-l-primary">
+          <div className="flex flex-wrap gap-4">
+            {expandedPhase.skills.map((skill) => (
+              <SkillCard key={skill.name} skill={skill} />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -122,7 +126,7 @@ export function SuperpowersSection() {
                 phase={phase}
                 isExpanded={isExpanded}
                 skillCount={phase.skills.length}
-                onClick={() => togglePhase(phase.key)}
+                onClick={() => selectPhase(phase.key)}
               />
               {isExpanded && (
                 <div className="mt-3 ml-4 pl-4 border-l border-dashed border-border">
