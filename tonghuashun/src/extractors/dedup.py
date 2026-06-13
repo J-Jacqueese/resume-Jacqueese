@@ -45,8 +45,9 @@ def deduplicate_articles(articles: list[dict[str, Any]], threshold: float = 0.75
                 is_duplicate = True
                 break
 
-        if not is_duplicate and article["id"] not in kept_ids:
+        article_id = article.get("id", "")
+        if not is_duplicate and article_id and article_id not in kept_ids:
             kept.append(article)
-            kept_ids.add(article["id"])
+            kept_ids.add(article_id)
 
     return kept
