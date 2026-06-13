@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "raw_record.schema.json",
+  "title": "RawRecord",
+  "description": "Layer 1: Original news data with source metadata and fetch provenance",
+  "type": "object",
+  "required": ["id", "source", "fetch_metadata", "raw"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UUID v4 for this record"
+    },
+    "source": {
+      "type": "object",
+      "required": ["name", "type", "url", "credibility"],
+      "properties": {
+        "name": { "type": "string", "description": "Source name, e.g. TechCrunch" },
+        "type": {
+          "type": "string",
+          "enum": ["tech_media", "aggregator", "official", "social_media"]
+        },
+        "url": { "type": "string", "format": "uri" },
+        "credibility": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "fetch_metadata": {
+      "type": "object",
+      "required": ["fetched_at", "method", "agent_id"],
+      "properties": {
+        "fetched_at": { "type": "string", "format": "date-time" },
+        "method": { "type": "string", "enum": ["websearch", "api", "manual"] },
+        "agent_id": { "type": "string" }
+      }
+    },
+    "raw": {
+      "type": "object",
+      "required": ["title", "body", "published_at", "language"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "body": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "published_at": { "type": "string", "format": "date-time" },
+        "language": { "type": "string", "enum": ["en", "zh"] }
+      }
+    }
+  }
+}

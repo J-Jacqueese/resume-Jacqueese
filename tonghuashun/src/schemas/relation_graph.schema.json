@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "relation_graph.schema.json",
+  "title": "RelationGraph",
+  "description": "Layer 3: Event relationship network with edges and thematic clusters",
+  "type": "object",
+  "required": ["nodes", "edges", "clusters"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Array of StructuredInsight IDs in this graph"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relation", "strength", "explanation"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation": {
+            "type": "string",
+            "enum": ["competes_with", "enables", "contradicts", "extends", "responds_to"]
+          },
+          "strength": { "type": "number", "minimum": 0, "maximum": 1 },
+          "explanation": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["theme", "members", "coverage"],
+        "properties": {
+          "theme": { "type": "string", "minLength": 1 },
+          "members": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 2
+          },
+          "coverage": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    }
+  }
+}
