@@ -4,8 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Daily Insight Dashboard</title>
+<!-- ECharts: try multiple CDNs -->
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>if(typeof echarts==='undefined'){document.write('<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js"><\/script>');}</script>
+<script>if(typeof echarts==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"><\/script>');}</script>
+<!-- D3.js: try multiple CDNs -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script>if(typeof d3==='undefined'){document.write('<script src="https://cdn.bootcdn.net/ajax/libs/d3/7.9.0/d3.min.js"><\/script>');}</script>
+<script>if(typeof d3==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"><\/script>');}</script>
 <style>
 :root {
   --bg: #0f0f1a; --card-bg: #1a1a2e; --border: #2a2a4a;
@@ -185,16 +191,29 @@ function refreshUI() {
   document.getElementById('footer-text').textContent = t('footer');
   document.getElementById('report-date').textContent = t('report_date') + ': ' + DASHBOARD_DATA.metadata.report_date;
 
-  // Re-render data-driven content
+  // Re-render data-driven content (HTML-based — always safe)
   renderOverview(DASHBOARD_DATA.overview);
   renderHotTopics(DASHBOARD_DATA.hot_topics);
-  renderCategoryChart(DASHBOARD_DATA.category_distribution);
-  renderSentimentChart(DASHBOARD_DATA.sentiment_distribution);
-  renderImpactChart(DASHBOARD_DATA.impact_ranking);
-  renderRadarChart(DASHBOARD_DATA.domain_radar);
-  renderNetworkChart(DASHBOARD_DATA.entity_network);
   renderTrends(DASHBOARD_DATA.trend_summary);
   renderRiskOppTable(DASHBOARD_DATA.risk_opportunities);
+
+  // Dispose existing ECharts instances before re-render
+  if (typeof echarts !== 'undefined') {
+    ['chart-category','chart-sentiment','chart-impact','chart-radar'].forEach(function(id) {
+      var inst = echarts.getInstanceByDom(document.getElementById(id));
+      if (inst) inst.dispose();
+    });
+  }
+  // Chart renderers — wrapped for CDN resilience
+  if (typeof echarts !== 'undefined') {
+    try { renderCategoryChart(DASHBOARD_DATA.category_distribution); } catch(e) { console.error('Category chart:', e); }
+    try { renderSentimentChart(DASHBOARD_DATA.sentiment_distribution); } catch(e) { console.error('Sentiment chart:', e); }
+    try { renderImpactChart(DASHBOARD_DATA.impact_ranking); } catch(e) { console.error('Impact chart:', e); }
+    try { renderRadarChart(DASHBOARD_DATA.domain_radar); } catch(e) { console.error('Radar chart:', e); }
+  }
+  if (typeof d3 !== 'undefined') {
+    try { renderNetworkChart(DASHBOARD_DATA.entity_network); } catch(e) { console.error('Network chart:', e); }
+  }
 }
 
 // ── Render functions ──
