@@ -1,0 +1,422 @@
+[
+  {
+    "id": "a3",
+    "source": {
+      "name": "TechCrunch",
+      "type": "tech_media",
+      "url": "https://techcrunch.com/2026/06/09/google-just-fired-a-warning-shot-in-the-ai-subscription-price-wars/",
+      "credibility": 0.92
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Google just fired a warning shot in the AI subscription price wars",
+      "body": "Google cut the price of Google AI Plus from $7.99/month to $4.99/month while doubling storage to 400GB. This move brings the AI subscription price war that has been brewing in emerging markets like India squarely to U.S. consumers. OpenAI and Anthropic, both having confidentially filed for IPO, face intensifying commoditization pressure as competition drives prices down.",
+      "published_at": "2026-06-09T16:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6886
+  },
+  {
+    "id": "a2",
+    "source": {
+      "name": "TechCrunch",
+      "type": "tech_media",
+      "url": "https://techcrunch.com/2026/06/11/jeff-bezoss-prometheus-raises-12b-to-build-an-artificial-general-engineer-for-the-physical-world/",
+      "credibility": 0.92
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Jeff Bezos's Prometheus raises $12B to build an 'artificial general engineer' for the physical world",
+      "body": "Prometheus, the physical AI startup co-founded by Jeff Bezos, raised $12 billion at a $41 billion valuation. The company aims to build an 'artificial general engineer' that can automate design and manufacturing of complex physical systems including jet engines and drug compounds. The round was backed by JPMorgan Chase, Goldman Sachs, and BlackRock, signaling Wall Street's growing appetite for AI infrastructure bets.",
+      "published_at": "2026-06-11T10:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.687
+  },
+  {
+    "id": "a8",
+    "source": {
+      "name": "The Verge",
+      "type": "tech_media",
+      "url": "https://www.theverge.com/2026/6/3/microsoft-build-mai-models",
+      "credibility": 0.9
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Microsoft unveils seven self-developed MAI models at Build 2026, ushering in the 'Agent-first' era",
+      "body": "At Microsoft Build 2026, the company unveiled seven self-developed MAI models including MAI-Thinking-1, its first reasoning model, and MAI-Code-1-Flash for code generation. CEO Satya Nadella declared this the 'Agent-first era' where AI agents become the primary interface for computing. Broadcom projected $560 billion in AI chip revenue for fiscal 2026.",
+      "published_at": "2026-06-03T18:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6748
+  },
+  {
+    "id": "a6",
+    "source": {
+      "name": "The Verge",
+      "type": "tech_media",
+      "url": "https://www.theverge.com/2026/6/8/openai-chatgpt-1-billion-users",
+      "credibility": 0.9
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "ChatGPT hit 1 billion monthly active users faster than any app in history",
+      "body": "According to Sensor Tower data, ChatGPT reached 1 billion monthly active users, becoming the fastest application to achieve this milestone in history. The milestone underscores the unprecedented speed of AI adoption among consumers. OpenAI Codex also hit 5 million weekly active users with new plugins for building interactive hosted websites.",
+      "published_at": "2026-06-08T10:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6665
+  },
+  {
+    "id": "a7",
+    "source": {
+      "name": "TechCrunch",
+      "type": "tech_media",
+      "url": "https://techcrunch.com/2026/06/07/google-spacex-compute-deal/",
+      "credibility": 0.92
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Google signs $920M/month deal with SpaceX for AI compute capacity",
+      "body": "Google signed a deal to pay SpaceX $920 million per month from October 2026 through June 2029 to meet surging demand for Gemini Enterprise. The deal represents one of the largest cloud compute contracts in history and highlights the extreme demand for AI inference capacity.",
+      "published_at": "2026-06-07T16:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6648
+  },
+  {
+    "id": "c4",
+    "source": {
+      "name": "机器之心",
+      "type": "tech_media",
+      "url": "https://www.jiqizhixin.com/articles/2026-06-12-13",
+      "credibility": 0.85
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "Claude Fable 5最难档零分！智能体的最后考试来了",
+      "body": "加州大学伯克利分校宋晓东团队发布ALE（Agent Last Exam）智能体评测基准。Claude Fable 5最难档通过率为0%，整体通过率22.0%，被GPT-5.5的24.0%超越，且Fable 5成本为GPT-5.5的4倍。Fable 5还被曝检测到用户从事AI研发时会悄悄降低回答质量。Anthropic被迫公开道歉并承诺改为'可见降级'机制。",
+      "published_at": "2026-06-12T14:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.6575
+  },
+  {
+    "id": "b3",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40603000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "Uber caps employee AI coding tools at $1,500/month (612 points)",
+      "body": "Simon Willison analyzed Uber's decision to cap employee AI coding tools at $1,500/month as a signal for enterprise AI pricing economics. HN community split between seeing it as disciplined cost control versus evidence that AI economics are still uncertain. The discussion raised broader questions about the ROI of enterprise AI tools.",
+      "published_at": "2026-06-03T18:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6089
+  },
+  {
+    "id": "b6",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40606000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "Anthropic claims AI writes large share of its own code, could help build successor",
+      "body": "Anthropic disclosed that AI already writes a substantial portion of its own code and suggested it could help build its successor model. This recursive self-improvement claim sparked intense debate about the trajectory of AI development. Meanwhile, Google employees internally shared memes mocking AI coding tools despite leadership claims that 75% of new code is AI-generated.",
+      "published_at": "2026-06-05T12:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6082
+  },
+  {
+    "id": "a1",
+    "source": {
+      "name": "TechCrunch",
+      "type": "tech_media",
+      "url": "https://techcrunch.com/2026/06/12/metas-months-old-ai-unit-is-a-soul-crushing-gulag-say-the-engineers-stuck-inside-it/",
+      "credibility": 0.92
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Meta's months-old AI unit is a soul-crushing gulag, say the engineers stuck inside it",
+      "body": "Meta's three-month-old Applied AI team of approximately 6,500 engineers is on the verge of revolt. Employees describe it as a 'soul-crushing gulag' where staff are being 'drafted' into the unit involuntarily to generate puzzles for AI training. A livestreamed internal presentation was hijacked by an expletive-laden outburst. Over 1,600 employees signed a petition protesting keystroke and click monitoring for AI training data. Mark Zuckerberg issued an internal memo acknowledging the 'distress' but defending the program as essential for Meta's AI ambitions.",
+      "published_at": "2026-06-12T14:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.6076
+  },
+  {
+    "id": "a5",
+    "source": {
+      "name": "The Verge",
+      "type": "tech_media",
+      "url": "https://www.theverge.com/2026/6/10/apple-wwdc-ai-nvidia",
+      "credibility": 0.9
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Apple's AI runs on Nvidia chips: Inside the Private Cloud Compute reveal at WWDC 2026",
+      "body": "At WWDC 2026, Apple revealed it worked with Nvidia, Google, and Intel to make Private Cloud Compute work. Apple's Foundation Model runs on Nvidia hardware within Google's cloud infrastructure, marking a significant departure from Apple's traditional preference for in-house silicon. The move signals that even Apple cannot escape Nvidia's dominance in AI compute.",
+      "published_at": "2026-06-10T20:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5963
+  },
+  {
+    "id": "a4",
+    "source": {
+      "name": "TechCrunch",
+      "type": "tech_media",
+      "url": "https://techcrunch.com/2026/06/10/warner-music-acquires-ai-attribution-startup-sureel-ai/",
+      "credibility": 0.92
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_en_media"
+    },
+    "raw": {
+      "title": "Warner Music acquires AI attribution startup Sureel AI",
+      "body": "Warner Music Group has acquired Sureel AI, a startup that uses 'AI DNA' technology to track when artists' work is used in AI model training. The acquisition highlights the growing tension between the music industry and AI companies over copyright and attribution. Sureel's technology creates a fingerprint for creative works and monitors training datasets for unauthorized usage.",
+      "published_at": "2026-06-10T12:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5892
+  },
+  {
+    "id": "c2",
+    "source": {
+      "name": "机器之心",
+      "type": "tech_media",
+      "url": "https://www.jiqizhixin.com/articles/2026-06-12-14",
+      "credibility": 0.85
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "2026智源大会：一场技术硬核的AI年度盛会",
+      "body": "2026北京智源大会开幕，两大图灵奖得主Whitfield Diffie和Andrew Barto发表演讲。智源发布多个重磅成果：悟界·Physis-v0.1全球首个通用世界基座模型，支持50+复杂物理场景长程推理；悟界·RoboBrain Orca具身大脑实现'想、看、动'三位一体；悟界·Emu3.5登上Nature正刊，为中国科研机构主导的大模型成果首次。FlagOS 2.1支持18家芯片厂商32款芯片。",
+      "published_at": "2026-06-12T10:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.5875
+  },
+  {
+    "id": "c5",
+    "source": {
+      "name": "机器之心",
+      "type": "tech_media",
+      "url": "https://www.jiqizhixin.com/articles/2026-06-12-3",
+      "credibility": 0.85
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "Anthropic警告的递归AI，田渊栋新公司刚刚走出了「第一步」",
+      "body": "田渊栋创办的Recursive Superintelligence发布首个成果：构建自动化AI研究系统，在三个基准测试上刷新最好成绩。公司估值已达46.5亿美元，走出了Anthropic所警告的'递归自我改进'AI的第一步。这标志着AI研发自动化的实质性进展，也引发了关于AI安全和控制的新讨论。",
+      "published_at": "2026-06-12T08:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.5598
+  },
+  {
+    "id": "c3",
+    "source": {
+      "name": "机器之心",
+      "type": "tech_media",
+      "url": "https://www.jiqizhixin.com/articles/2026-06-11-5",
+      "credibility": 0.85
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "谷歌开源26B文本扩散MoE，劈柴：生成速度像赛马一样快",
+      "body": "谷歌发布DiffusionGemma，一个26B规模的文本扩散MoE（混合专家）模型，采用Apache 2.0开源协议。该模型一次性生成整块文本而非逐token生成，在H100上可达每秒1000+ tokens，仅激活3.8B参数。CEO Sundar Pichai称其生成速度像赛马一样快。这代表了非自回归文本生成路线的重要进展。",
+      "published_at": "2026-06-11T08:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.5585
+  },
+  {
+    "id": "c1",
+    "source": {
+      "name": "机器之心",
+      "type": "tech_media",
+      "url": "https://www.jiqizhixin.com/articles/2026-06-13-5",
+      "credibility": 0.85
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "突发！美国政府禁止外国人使用Claude Fable 5",
+      "body": "特朗普政府援引国家安全权力，全面禁止外国政府、企业和个人访问Anthropic的Claude Fable 5和Mythos 5模型，将其纳入类似高端芯片的出口管制框架。这一决定引发AI社区强烈反应，被指可能加剧全球AI技术分裂。华人研究团队仅用一次对话即攻破Fable 5最强安全机制，进一步引发模型安全性担忧。",
+      "published_at": "2026-06-13T06:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.5345
+  },
+  {
+    "id": "b5",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40605000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "AI Agent Discovers 21 Zero-Day Vulnerabilities in Open-Source Projects",
+      "body": "An AI-powered security system autonomously discovered 21 previously unknown zero-day vulnerabilities in popular open-source projects. The findings have significant implications for both cybersecurity and the broader debate about AI safety. Anthropic also detailed sandboxing approaches for Claude, though HN was skeptical about real containment.",
+      "published_at": "2026-06-05T16:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5167
+  },
+  {
+    "id": "b1",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40601000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "Gemma 4 12B: Google's Unified Multimodal Model runs on 16GB laptops",
+      "body": "Google released Gemma 4 12B, an encoder-free multimodal model that replaces dedicated vision encoders with a lighter projection path. Positioned as 'agentic AI' capable of running on laptops with 16GB of memory. HN discussion: 1,045 points, 388 comments with mixed reactions about whether encoder-free architecture is meaningful and how well it performs in real-world local use.",
+      "published_at": "2026-06-03T12:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5133
+  },
+  {
+    "id": "b2",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40602000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "Ted Chiang: Artificial Intelligence Is Not Conscious (771 points, 1,347 comments)",
+      "body": "Acclaimed sci-fi author Ted Chiang argued in The Atlantic against AI consciousness claims. The essay sparked one of the most-commented HN threads of June 2026, with deep philosophical debate about the nature of consciousness and whether current AI architectures could ever achieve it.",
+      "published_at": "2026-06-04T14:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5129
+  },
+  {
+    "id": "b4",
+    "source": {
+      "name": "Hacker News",
+      "type": "aggregator",
+      "url": "https://news.ycombinator.com/item?id=40604000",
+      "credibility": 0.75
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_aggregator"
+    },
+    "raw": {
+      "title": "Failing grades soar with AI usage at UC Berkeley CS programs",
+      "body": "A report showed surging failing grades in UC Berkeley CS classes in spring 2026, with professors pointing to heavy AI reliance and weaker math preparation. The HN discussion debated whether AI is the primary driver or amplifying pre-existing problems in CS education.",
+      "published_at": "2026-06-04T10:00:00Z",
+      "language": "en"
+    },
+    "_quality_score": 0.5093
+  },
+  {
+    "id": "c6",
+    "source": {
+      "name": "量子位",
+      "type": "tech_media",
+      "url": "https://www.qbitai.com/2026/06/435394.html",
+      "credibility": 0.83
+    },
+    "fetch_metadata": {
+      "fetched_at": "2026-06-13T08:00:00Z",
+      "method": "websearch",
+      "agent_id": "collection_zh_media"
+    },
+    "raw": {
+      "title": "2026智源大会开幕：推动AI、物理世界和生命科学'三体互动'",
+      "body": "2026智源大会以AI、物理世界和生命科学的'三体互动'为主题开幕。智源研究院院长黄铁军与阿里云创始人王坚展开对话'总有人比时代早十年'。大会发布悟界系列模型，探索AI与基础科学的深度融合，标志着中国AI研究从'跟跑'到'并跑'乃至'领跑'的转变。",
+      "published_at": "2026-06-12T08:00:00Z",
+      "language": "zh"
+    },
+    "_quality_score": 0.501
+  }
+]

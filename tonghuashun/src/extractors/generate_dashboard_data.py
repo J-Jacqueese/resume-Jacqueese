@@ -88,10 +88,10 @@ def generate_dashboard_data(
         "nodes": org_nodes,
         "edges": [
             {
-                "source": edge["from"],
-                "target": edge["to"],
-                "relation": edge["relation"],
-                "strength": edge["strength"]
+                "source": edge.get("from", edge.get("source", "")),
+                "target": edge.get("to", edge.get("target", "")),
+                "relation": edge.get("relation", "unknown"),
+                "strength": edge.get("strength", 0.5)
             }
             for edge in relation_graph.get("edges", [])
         ],
