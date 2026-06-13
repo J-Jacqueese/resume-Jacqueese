@@ -345,31 +345,60 @@ function renderRadarChart(data) {
 
 function renderNetworkChart(data) {
   var container = document.getElementById('chart-network');
-  // Clear previous SVG
   container.innerHTML = '';
   if (!data || !data.nodes || !data.nodes.length) {
     container.innerHTML = '<div style="text-align:center;padding:100px;color:#888">' + t('no_entity_data') + '</div>';
     return;
   }
-  var width = container.clientWidth;
+  var width = container.clientWidth || 700;
   var height = 420;
+
+  // Normalize ID: lowercase + replace underscores with spaces
+  function normId(id) { return String(id).toLowerCase().replace(/_/g, ' ').trim(); }
+
+  // Build node lookup by normalized ID
+  var nodeMap = {};
+  var nodes = data.nodes.map(function(d) {
+    var n = Object.assign({}, d, { radius: Math.max(8, Math.min(30, (d.weight || 1) * 5)) });
+    nodeMap[normId(d.id)] = n;
+    return n;
+  });
+
+  // Resolve edge refs — auto-add missing nodes, use exact IDs from nodeMap
+  var validLinks = [];
+  (data.edges || []).forEach(function(e) {
+    var srcNorm = normId(e.source);
+    var tgtNorm = normId(e.target);
+    // Auto-add missing source node
+    if (!nodeMap[srcNorm]) {
+      var newNode = { id: e.source.replace(/_/g, ' '), group: 'organization', weight: 1, radius: 10 };
+      nodeMap[srcNorm] = newNode;
+      nodes.push(newNode);
+    }
+    // Auto-add missing target node
+    if (!nodeMap[tgtNorm]) {
+      var newNode = { id: e.target.replace(/_/g, ' '), group: 'organization', weight: 1, radius: 10 };
+      nodeMap[tgtNorm] = newNode;
+      nodes.push(newNode);
+    }
+    validLinks.push({
+      source: nodeMap[srcNorm].id,
+      target: nodeMap[tgtNorm].id,
+      relation: e.relation,
+      strength: e.strength
+    });
+  });
+
   var svg = d3.select('#chart-network').append('svg').attr('width', width).attr('height', height);
 
-  var nodes = data.nodes.map(function(d) {
-    return Object.assign({}, d, { radius: Math.max(8, Math.min(30, (d.weight || 1) * 5)) });
-  });
-  var links = (data.edges || []).map(function(d) {
-    return { source: d.source, target: d.target, relation: d.relation, strength: d.strength };
-  });
-
   var simulation = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
+    .force('link', d3.forceLink(validLinks).id(function(d) { return d.id; }).distance(100))
     .force('charge', d3.forceManyBody().strength(-200))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collision', d3.forceCollide().radius(function(d) { return d.radius + 2; }));
 
-  var link = svg.append('g').selectAll('line').data(links).join('line')
-    .attr('stroke', '#2a2a4a').attr('stroke-width', function(d) { return Math.max(1, d.strength * 3); });
+  var link = svg.append('g').selectAll('line').data(validLinks).join('line')
+    .attr('stroke', '#2a2a4a').attr('stroke-width', function(d) { return Math.max(1, (d.strength || 0.5) * 3); });
 
   var node = svg.append('g').selectAll('circle').data(nodes).join('circle')
     .attr('r', function(d) { return d.radius; }).attr('fill', '#00d4ff').attr('opacity', 0.8)
@@ -388,8 +417,9 @@ function renderNetworkChart(data) {
     label.attr('x', function(d) { return d.x; }).attr('y', function(d) { return d.y; });
   });
 
+  // Legend
   var relationTypes = [];
-  links.forEach(function(l) { if (relationTypes.indexOf(l.relation) === -1) relationTypes.push(l.relation); });
+  validLinks.forEach(function(l) { if (relationTypes.indexOf(l.relation) === -1) relationTypes.push(l.relation); });
   var legend = svg.append('g').attr('transform', 'translate(10, ' + (height - 20 - relationTypes.length * 20) + ')');
   relationTypes.forEach(function(rel, i) {
     legend.append('rect').attr('x', 0).attr('y', i * 20).attr('width', 12).attr('height', 12).attr('fill', '#00d4ff').attr('opacity', 0.6);
