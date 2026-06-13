@@ -15,3 +15,18 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Data (keep structure, ignore content)
+data/raw/*
+data/processed/*
+data/structured/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/structured/.gitkeep
+
+# Output examples (keep structure)
+output/reports/*
+output/dashboard/*
+!output/reports/.gitkeep
+!output/dashboard/.gitkeep
+!output/examples/
