@@ -2,6 +2,22 @@
 
 ## Vue和React区别
 
+| **对比维度**                | **Vue**                                                      | **React**                                                    |
+| --------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **数据流**                  | 双向数据绑定（`v-model`），父子间可通过事件或 props 同步更新 | 单向数据流（`state`），数据由父传子，子通过回调通知父更新    |
+| **模板编写**                | 接近原生 HTML 模板，增加指令属性（如 `v-if`、`v-for`）       | 使用 JSX（JavaScript XML）在 JS 中直接编写模板               |
+| **监听数据变化原理**        | 基于 `getter/setter`（Vue 2）或 Proxy（Vue 3）进行数据劫持，精确追踪依赖 | 基于引用比较（浅比较），需要配合 `PureComponent` / `shouldComponentUpdate` / `memo` 优化 |
+| **虚拟 DOM 更新策略**       | 渲染时跟踪组件依赖，只更新变化部分，默认优化                 | 状态变化时默认重新渲染子组件，通过 `PureComponent` / `shouldComponentUpdate` 控制优化 |
+| **功能组合方式**            | `mixin`（Vue 3 中更推荐 Composition API）                    | 高阶组件（HoC）和自定义 Hooks                                |
+| **组件传值**                | 父传子用 `props`，子传父常用自定义事件（`$emit`）或回调函数，倾向事件方式 | 父传子用 `props`，子传父主要用回调函数                       |
+| **语法糖与工具**            | 提供 `v-model` 等语法糖；构建工具 vue-cli / Vite             | 无直接语法糖（用受控组件模式代替）；构建工具 Create React App / Vite |
+| **跨平台方案**              | Weex、uni-app                                                | React Native                                                 |
+| **diff 算法类型**           | 基于依赖追踪的优化 diff                                      | 深度优先遍历 + 分治策略，分为 **树比对**、**组件比对**、**元素比对** |
+| **树比对**                  | 依赖追踪，只比较受影响部分                                   | 仅同层级节点比较，忽略跨层级移动，提升性能                   |
+| **组件比对**                | 根据依赖判断是否更新                                         | 同类型组件 → 树比对，不同类型 → 直接替换                     |
+| **元素比对**                | 精确追踪依赖变化                                             | 同层级子节点通过 `key` 提高列表对比效率                      |
+| **Fiber 架构（React 16+）** | 不适用                                                       | 引入 FiberNode（双链表）和 FiberTree 实现可中断渲染；使用双缓冲（`current` / `workInProgress`）结构提升可控性与性能 |
+
 #### 相同点
 
 - 都是数据驱动视图 MVVM 框架，通过不同的机制实现响应式更新，优化用户体验。
@@ -27,21 +43,41 @@
 - **组件更新控制颗粒度不同。Vue3 通过静态标记 + 响应式 + 虚拟 dom 的方式，控制了 diff 的颗粒度，让 diff 的时间不会超过 16ms，但是 React 自上而下的 diff 过程，项目大了之后，一旦 diff 的时间超过 16.6ms，就会造成卡顿，对此 React 交出的解决方案就是时间切片。**时间分片解决的问题并不多，只解决了很少一部分场景的问题，比如动画和可视化。99% 的场景不需要时间分片，时间分片只会延长整个渲染时长。React 有很多问题，我这里补充一点，Fiber 的链表遍历制约了 React 的 diff 算法、让很多优化变得无法实施。总得来说，Vue 3 对利弊的权衡对我很有说服力。另外，时间分片，或者说并发模式，给 React 带来了另外一个问题：React 需要对所有更新任务进行调度和调和，这导致 React 还需要搞定任务优先级、任务失效处理、re-entry 等任务，这会使 React 变得更复杂，进而让源码的体积膨胀。就算 React 把 Suspense、Tree-shaking 等优化都加上，Vue 3 的运行时体积也只有 React + ReactDOM 的 1/4。
 - **在生态建设上，React 和 Vue 的路线是不一样的**。Vue 的 Cli、路由和状态管理，都是 Vue 的核心库的一部分，受到官方支持和维护。但是 React 团队只负责维护 React 这一个项目，脚手架工具、路由和状态管理都来自于第三方的社区开发者。
 
-| **对比维度**                | **Vue**                                              | **React**                                                                          |
-| ----------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **数据流**                 | 双向数据绑定（`v-model`），父子间可通过事件或 props 同步更新               | 单向数据流（`state`），数据由父传子，子通过回调通知父更新                                                   |
-| **模板编写**                | 接近原生 HTML 模板，增加指令属性（如 `v-if`、`v-for`）                | 使用 JSX（JavaScript XML）在 JS 中直接编写模板                                                 |
-| **监听数据变化原理**            | 基于 `getter/setter`（Vue 2）或 Proxy（Vue 3）进行数据劫持，精确追踪依赖 | 基于引用比较（浅比较），需要配合 `PureComponent` / `shouldComponentUpdate` / `memo` 优化             |
-| **虚拟 DOM 更新策略**         | 渲染时跟踪组件依赖，只更新变化部分，默认优化                               | 状态变化时默认重新渲染子组件，通过 `PureComponent` / `shouldComponentUpdate` 控制优化                   |
-| **功能组合方式**              | `mixin`（Vue 3 中更推荐 Composition API）                  | 高阶组件（HoC）和自定义 Hooks                                                                |
-| **组件传值**                | 父传子用 `props`，子传父常用自定义事件（`$emit`）或回调函数，倾向事件方式         | 父传子用 `props`，子传父主要用回调函数                                                            |
-| **语法糖与工具**              | 提供 `v-model` 等语法糖；构建工具 vue-cli / Vite                | 无直接语法糖（用受控组件模式代替）；构建工具 Create React App / Vite                                     |
-| **跨平台方案**               | Weex、uni-app                                         | React Native                                                                       |
-| **diff 算法类型**           | 基于依赖追踪的优化 diff                                       | 深度优先遍历 + 分治策略，分为 **树比对**、**组件比对**、**元素比对**                                         |
-| **树比对**                 | 依赖追踪，只比较受影响部分                                        | 仅同层级节点比较，忽略跨层级移动，提升性能                                                              |
-| **组件比对**                | 根据依赖判断是否更新                                           | 同类型组件 → 树比对，不同类型 → 直接替换                                                            |
-| **元素比对**                | 精确追踪依赖变化                                             | 同层级子节点通过 `key` 提高列表对比效率                                                            |
-| **Fiber 架构（React 16+）** | 不适用                                                  | 引入 FiberNode（双链表）和 FiberTree 实现可中断渲染；使用双缓冲（`current` / `workInProgress`）结构提升可控性与性能 |
+## React生命周期(类组件)
+
+<img src="%E5%89%8D%E7%AB%AF%E9%9D%A2%E7%BB%8F.assets/Image%20(23).png" alt="Image.png" style="zoom: 33%;" />
+
+### 一、挂载阶段（Mount）
+
+- **constructor**：初始化 state、绑定事件、节流防抖、从路由取参数。
+- **getDerivedStateFromProps**（静态方法）：将 props 映射到 state（初始化 & 更新都会触发）。
+- **render**：纯函数，返回 React Element，禁止在这里直接操作 DOM 或调用 setState。
+- **componentDidMount**：DOM 已经挂载，可进行 DOM 操作、事件监听、数据请求。
+
+**Hooks 对应**
+
+`useEffect(() => { ... }, [])` → 相当于 componentDidMount（空依赖只执行一次）。
+
+### **二、更新阶段（Update）**
+
+- **getDerivedStateFromProps**：props 变化时映射到 state。
+- **shouldComponentUpdate**：性能优化，返回 false 可阻止渲染。
+- **render**：重新渲染虚拟 DOM。
+- **getSnapshotBeforeUpdate**：获取 DOM 更新前的快照（滚动位置等）。
+- **componentDidUpdate**：DOM 已更新，可操作最新 DOM；需防止 setState 死循环。
+
+**Hooks 对应**
+
+- `useEffect(() => { ... })` → 相当于 componentDidUpdate + componentDidMount。
+- `useLayoutEffect` → 同步执行，适合测量和同步 DOM。
+
+### **三、卸载阶段（Unmount）**
+
+- **componentWillUnmount**：清理定时器、取消请求、移除事件监听。
+
+**Hooks 对应**
+
+`useEffect(() => { return () => { ... } }, [])` → 清理函数相当于 componentWillUnmount。
 
 ## React 事件机制
 
@@ -81,6 +117,126 @@ React并不是将click事件绑定到了div的真实DOM上，而是**在document
   - 对于事件名称命名方式，原生事件为全小写，react 事件采用小驼峰；
   - 对于事件函数处理语法，原生事件为字符串，react 事件为函数；
 - react 事件不能采用 return false 的方式来阻止浏览器的默认行为，而必须要地明确地**调用`preventDefault()`来阻止默认行为。（使用 Stoppropagation 无效）**
+
+
+
+## Fiber
+
+### Q1. 为什么设计 Fiber，React 为什么需要 Fiber ？
+
+**痛点**: React V15 在渲染时，会递归比对 VirtualDOM 树，找出需要变动的节点，然后同步更新它们， 一气呵成。这个过程期间， React 会占据浏览器资源，这会导致用户触发的事件得不到响应，并且会导致掉帧，**StackRecociler 是一个不可打断的渲染任务, 导致用户感觉到卡顿**。
+
+- **递归对比虚拟 DOM 树，执行栈会越来越深。（没办法中断，用户会感觉卡顿）**
+- **同步更新DOM，不能中断，中断后也不能恢复。**
+- **JS 代码执行时间长，会持续占用主线程，出现渲染卡顿。**
+
+**Fiber作用**:  保证贼应用持续复杂计算同时保证流畅的交互和视觉响应
+
+- **实现虚拟 DOM 的增量渲染,避免主线程阻塞**
+    - 能够将渲染工作拆分成块并将其分散到多个浏览器帧的能力。在新的更新到来时，能够暂停、中止和复用工作，能为不同类型的更新分配优先级顺序的能力，减少了单次执行JS执行时间
+- **实现更新的优先级调度**
+    - 任务可中断,为不同更新赋予不同优先级
+        - 最高优先级:用户输入(打字、点击)
+        - 中等优先级:动画更新
+        - 低优先级:网络请求数据返回更新
+- **为并发特性铺路**
+    - useTransition/useDeferredVlaue 建立在Fiber可中断和可调度的能力之上
+
+Fiber两阶段: 
+
+- **渲染/调和阶段**: “可中断” 的异步阶段。
+    - 构建“工作中”的 Fiber 树（work-in-progresstree）。
+    - 计算出所有节点的变更。
+    - 此过程可以被暂停、重做、丢弃，不会产生用户可见的副作用。
+
+- 提交阶段: “不可中断”的同步阶段
+    - 一旦调和阶段完成，进入提交阶段。
+    -  将计算出的所有变更一次性应用到 DOM上。
+    - 必须同步，以确保 UI的一致性，避免出现渲染了一半的界面。
+
+### Q2. Fiber 为什么设计成链表结构？为什么中断执行后可以恢复？
+
+fiber 对象中存储的元素上下文信息以及指针域构成的链表结构，使其能够**将执行到一半的工作保存在内存的链表中**。当 React 停止并完成保存的工作后，让出时间片去处理一些其他优先级更高的事情。之后，在重新获取到可用的时间片后，它能够根据之前保存在内存的上下文信息通过快速遍历的方式找到停止的 fiber 节点并继续工作。由于在此阶段执行的工作并不会导致任何用户可见的更改，因为并没有被提交到真实的 DOM。所以，**这种链表结构的 fiber 能让让调度能够实现暂停、中止以及重新开始等增量渲染的能力。**
+
+### Q3. React Fiber 是如何实现更新过程可控？执行流程？
+
+更新过程的可控主要体现在下面几个方面：
+
+- 任务拆分
+- 任务挂起、恢复、终止
+- 任务具备优先级
+
+**任务拆分**
+
+在 React Fiber 机制中，它采用"化整为零"的思想，将**调和阶段（Reconciler）递归遍历 VDOM 这个大任务分成若干小任务**，每个任务只负责一个节点的处理。
+
+**任务挂起、恢复、终止**
+
+**workInProgress tree**： workInProgress 代表**当前正在执行更新的 Fiber 树**。在 render 或者 setState 后，会构建一颗 Fiber 树，也就是 workInProgress tree，这棵树在构建每一个节点的时候会收集当前节点的副作用，整棵树构建完成后，会形成一条完整的副作用链。
+
+**currentFiber tree**：currentFiber 表示**上次渲染构建的 Filber 树**。在每一次更新完成后 workInProgress 会赋值给 currentFiber。在新一轮更新时 workInProgress tree 再重新构建，新 workInProgress 的节点通过 alternate 属性和 currentFiber 的节点建立联系。
+
+在新 **workInProgress tree 的创建过程中，会同 currentFiber 的对应节点进行 Diff 比较，收集副作用**。同时也会复用和 currentFiber 对应的节点对象，减少新创建对象带来的开销。也就是说无论是创建还是更新、挂起、恢复以及终止操作都是发生在 workInProgress tree 创建过程中的。workInProgress tree 构建过程其实就是循环的执行任务和创建下一个任务。
+
+**挂起**
+
+当**第一个小任务完成后，先判断这一帧是否还有空闲时间，没有就挂起下一个任务的执行**，记住当前挂起的节点，让出控制权给浏览器执行更高优先级的任务。
+
+**恢复**
+
+**在浏览器渲染完一帧后，判断当前帧是否有剩余时间，如果有就恢复执行之前挂起的任务。**如果没有任务需要处理，代表调和阶段完成，可以开始进入渲染阶段。
+
+1. 如何判断一帧是否有空闲时间的呢？
+
+使用前面提到的 RIC (RequestIdleCallback) 浏览器原生 API，React 源码中为了兼容低版本的浏览器，对该方法进行了 Polyfill。
+
+1. 恢复执行的时候又是如何知道下一个任务是什么呢？
+
+答案是在前面提到的链表。在 React Fiber 中每个任务其实就**是在处理一个 FiberNode 对象，然后又生成下一个任务需要处理的 FiberNode。**
+
+**终止**
+
+其实并不是每次更新都会走到提交阶段。当在调和过程中触发了新的更新，在执行下一个任务的时候，判断是否有优先级更高的执行任务，如果有就终止原来将要执行的任务，开始新的 workInProgressFiber 树构建过程，开始新的更新流程。这样可以避免重复更新操作。这也是在 React 16 以后生命周期函数 componentWillMount 有可能会执行多次的原因。
+
+### Q4. React 能否像 Vue 那样进行预编译优化
+
+Vue3.0 提出动静结合的 DOM diff 思想，动静结合的 DOM diff其实是在预编译阶段进行了优化。之所以能够做到**预编译优化**，是因为 Vue core 可以**静态分析 template**，在解析模版时，整个 parse 的过程是利用**正则表达式**顺序解析模板，当解析到开始标签、闭合标签和文本的时候都会分别执行对应的回调函数，来达到构造 AST 树的目的。
+
+**借助预编译过程**，Vue 可以做到的预编译优化就很强大了。比如在预编译时标记出模版中可能变化的组件节点，再次进行渲染前 diff 时就可以**跳过“永远不会变化的节点”**，而只需要对比“可能会变化的动态节点”。这也就是**动静结合的 DOM diff 将 diff 成本与模版大小正相关优化到与动态节点正相关的理论依据**。
+
+Vue 需要做数据双向绑定，需要进行数据拦截或代理，那它就需要在**预编译阶段静态分析模版，分析出视图依赖了哪些数据，进行响应式处理**。而 React 就是**局部重新渲染**，React 拿到的或者说掌管的，所负责的就是一堆**递归 React.createElement** 的执行调用（参考下方经过Babel转换的代码），它无法从模版层面进行静态分析。[JSX 和手写的 render function是完全动态的，**过度的灵活性导致运行时可以用于优化的信息不足**。
+
+- JSX 具有 JavaScript 的完整表现力，可以构建非常复杂的组件。但是**灵活**的语法，也意味着**引擎难以理解**，无法预判开发者的用户意图，从而难以优化性能。
+- Template 模板是一种非常有**约束**的语言，你只能以某种方式去编写模板。
+
+既然存在以上**编译时先天不足**，在运行时优化方面，React 一直在努力。比如，React15 实现了 batchedUpdates（批量更新）。即**同一事件回调函数上下文**中的多次 setState 只会触发一次更新。但是，如果单次更新就很耗时，页面还是会卡顿（这在一个维护时间很长的大应用中是很常见的）。这是因为 React15 的更新流程是同步执行的，一旦开始更新直到页面渲染前都不能中断。
+
+### Q5. React hooks 的实现必须依赖 Fiber 吗?
+
+React 的 hooks 是在 fiber 之后出现的特性，所以很多人误以为 hooks 是必须依赖 fiber 才能实现的，其实并不是，它们俩**没啥必然联系。**
+
+在 React16 之前，会递归渲染这个 vdom，增删改真实 dom。而在 React16 引入了 fiber 架构之后就多了一步：首先把 vdom 转成 fiber，之后再渲染 fiber。**vdom 转 fiber 的过程叫做 reconcile**，最后增删改真实 dom 的过程叫做 commit。因为 vdom 只有子节点 children 的引用，没有父节点 parent 和其他兄弟节点 sibling 的引用，这导致了要一次性递归把所有 vdom 节点渲染到 dom 才行，不可打断。万一打断了会怎么样呢？因为没有记录父节点和兄弟节点，那只能继续处理子节点，却不能处理 vdom 的其他部分了。所以 React 才引入了这种 fiber 的结构，也就是有父节点 return、子节点 child、兄弟节点 sibling 等引用，可以打断，因为断了再恢复也能找到后面所有没处理过的节点。
+
+所以 fiber 架构就分为了 schdule、reconcile（vdom 转 fiber）、commit（更新到 dom）三个阶段。
+
+函数组件内可以用 hooks 来存取一些值，这些值就是存在 fiber 节点上的。不同的 hook 在 memorizedState 链表不同的元素上存取值，通过 next 串联起来，这就是 react hooks 的原理。
+
+### Q7. Concurrent Mode
+
+Concurrent Mode 指的就是 React 利用上面 Fiber 带来的新特性的开启的新模式 (mode)。react17开始支持concurrent mode，这种模式的根本目的是为了让应用保持cpu和io的快速响应，它是一组新功能，包括Fiber、Scheduler、Lane，可以根据用户硬件性能和网络状况调整应用的响应速度，核心就是为了实现异步可中断的更新。concurrent mode也是未来react主要迭代的方向。
+
+目前 React 实验版本允许用户选择三种 mode：
+
+1. Legacy Mode: 就相当于目前稳定版的模式
+2. Blocking Mode: 应该是以后会代替 Legacy Mode 而长期存在的模式
+3. Concurrent Mode: 以后会变成 default 的模式
+
+Concurrent Mode 其实开启了一堆新特性，其中有两个最重要的特性可以用来解决我们开头提到的两个问题：
+
+1. [Suspense (opens new window)](https://juejin.cn/post/6844903981999718407)：Suspense 是 React 提供的一种异步处理的机制, 它不是一个具体的数据请求库。它是React 提供的原生的组件异步调用原语。
+2. [useTrasition (opens new window)](https://juejin.cn/post/6844903986420514823)：让页面实现 Pending -> Skeleton -> Complete 的更新路径, 用户在切换页面时可以停留在当前页面，让页面保持响应。 相比展示一个无用的空白页面或者加载状态，这种用户体验更加友好。
+
+其中 Suspense 可以用来解决请求阻塞的问题，UI 卡顿的问题其实开启 concurrent mode 就已经解决的，但如何利用 concurrent mode 来实现更友好的交互还是需要对代码做一番改动的。
 
 ## JSX 是什么
 
@@ -247,9 +403,9 @@ JSX 是一个 JavaScript 的语法扩展，结构类似 XML。JSX 主要用于**
 - setState 有专门监听 state 变化的回调函数 callback，可以获取最新state；但是在函数组件中，只能通过 useEffect 来执行 state 变化引起的副作用。
 - setState 在底层处理逻辑上主要是和老 state 进行合并处理，而 useState 更倾向于重新赋值。
 
-## Hooks 左右好处
+## Hooks 
 
-## UseState
+### UseState
 
 - **保证状态更新的准确性**（异步操作和批量更新）
 
@@ -265,7 +421,7 @@ JSX 是一个 JavaScript 的语法扩展，结构类似 XML。JSX 主要用于**
 
 
 
-## useEffect/useLayoutEffect 有什么区别？
+### useEffect/useLayoutEffect 有什么区别？
 
 useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `useEffect： 浏览器完成渲染和绘制之后异步执行。不阻塞绘制，页面响应更快。useLayoutEffect: DOM 更新之后、浏览器实际绘制之前同步执行。会阻塞绘制，耗时操作可能导致卡顿。`
 
@@ -286,7 +442,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
     - 场景：读取 DOM 布局信息并同步更新 DOM（如动态计算Tooltip 位置、动态图表尺寸）。
     - 目的：**避免用户看到视图闪烁**
 
-## UseEffect 依赖项数组原理与应用
+### UseEffect 依赖项数组原理与应用
 
 现象：没有依赖项，但是在内部使用 setState 会造成无限循环的问题。
 
@@ -330,7 +486,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
 - dispatch 函数
   - 引用是永久稳定的，所以可以安全地把它们加入依赖项数组。
 
-## UseEffect 如何正确处理异步操作
+### UseEffect 如何正确处理异步操作
 
 
 
@@ -367,7 +523,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
     -  发起请求：   - 将信号 (`controller.signal`) 作为选项传递给 `fetch` 等异步请求。   - 使得请求可以被中止。 
     -  清理函数：   - 在 `useEffect` 的清理函数中调用 `controller.abort()`，以取消任何未完成的请求。 这防止了旧请求的结果覆盖新请求的结果。 
 
-## UseContext 的性能优化
+### UseContext 的性能优化
 
 `useContext` 的性能困境
 
@@ -400,15 +556,22 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
     - **效果**：
       - 确保 `value` 的引用仅在其依赖项真正发生变化时才更新，从而减少不必要的渲染，提升性能。
 
-## UseReducer 和 UseState 区别？
+### UseReducer 和 UseState 区别？--状态
 
-面试：
+`useState` 适合简单的、独立的局部状态，而 `useReducer` 适合复杂的、有内在逻辑联系的状态。
 
-- 向于考虑使用 useReducer：当组件状态逻辑复杂时，如：
+- **`useState` (指令式更新)**：你直接告诉 React “**我要把状态变成具体什么样**”。
+    - *工作模式*: `const [state, setState] = useState(initialState)`
+    - *更新动作*: `setState(newState)`
+- **`useReducer` (声明式动作)**：你不直接修改状态，而是告诉 React “发生了什么事情（Action）”，然后由一个专门的函数（Reducer）集中处理这些事情，并决定状态该怎么变。
+    - *工作模式*: `const [state, dispatch] = useReducer(reducer, initialState)`
+    - *更新动作*: `dispatch({ type: 'INCREMENT' })`
+
+- useReducer使用：当组件状态逻辑复杂时，如：
   - 状态对象含多个子值，或下一状态计算依赖前一状态，**状态依赖**。
   - **更新逻辑分散**在组件的多个事件处理函数中。
 - useReducer 与 Redux 区别: 
-  - useReducer 主要用于组件内部或有限跨组件共享，非全局状态管理方案。
+  - useReducer 主要用于**组件内部或有限跨组件共享**，非全局状态管理方案。
 - 优势
   - 代码结构更清晰，可维护性更好：**状态转换规则集中**。
   - 优化的dispatch 传递：**稳定的 dispatch 引用利于子组件性能优化。**
@@ -426,7 +589,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
   
   - action通常包含type（操作类型）和 payload（数据）。
 
-- **优势 1**：复杂状态逻辑的集中管理
+- 优势 1：复杂状态逻辑的集中管理
   - 将复杂状态的更新逻辑集中到 reducer 函数中。
   - 所有状态转换规则清晰定义，通过 action.type 区分。
   - 增强代码意图明确性、可读性和可维护性。
@@ -445,7 +608,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
   - action 对象清晰描述了操作意图和所需数据。
   - 有助于调试和理解复杂状态的流转过程。
 
-## UseCallback 和 Usememo
+### UseCallback 和 Usememo
 
 `useMemo` 和 `useCallback` 都是 React 提供的 Hooks，用于优化组件性能，但它们的用途和工作方式略有不同：
 
@@ -471,7 +634,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
       - useEffect 因其函数依赖引用频繁变化而重复执行。 -> useCallBack
       - 计算逻辑确实非常耗时（几十毫秒以上）且输入不常变化时 -> useMemo
 
-## UseRef 常见用途
+### UseRef 常见用途
 
 - 定义：
   - 调用 useRef（initialvalue）返回一个可变的 ref 对象。
@@ -491,7 +654,7 @@ useEffect和useLayoutEffect 最主要的区别是`执行时机`的不同， `use
 
 
 
-## React.forwardRef 和 UseImperativeHandle
+### React.forwardRef 和 UseImperativeHandle
 
 - React.forwardRef 定义
   - 主要解决父组件需获取其子函数组件内部特定 DOM元素或子类组件实例 ref 的场景。
@@ -529,7 +692,7 @@ React Hook
 
 自定义 hooks 解决逻辑复用的问题，那么在正常的业务开发过程中，要明白哪些逻辑是**重复性强的逻辑**，这段逻辑主要功能是什么。
 
-#### 接收状态
+### 接收状态
 
 自定义 hooks ，可以**通过函数参数来直接接收组件传递过来的状态**，也可以通过 useContext ，来隐式获取上下文中的状态。比如 React Router 中最简单的一个自定义 hooks —— useHistory ，用于获取 history 对象。
 
@@ -541,7 +704,7 @@ export default function useHistory() {
 
 注意：**如果使用了内部含有 useContext 的自定义 hooks ，那么当 context 上下文改变，会让使用自定义 hooks 的组件自动渲染。**
 
-#### 存储｜管理状态
+### 存储｜管理状态
 
 **储存状态**
 
@@ -553,7 +716,7 @@ export default function useHistory() {
 
 当然 `useRef 和 useEffect 可以配合记录函数组件的内部的状态`。举个例子，我编写一个自定义 hooks 用于记录函数组件执行次数，和是否第一次渲染。
 
-##### 更新状态
+### 更新状态
 
 **改变状态**
 
@@ -632,7 +795,7 @@ useState 和 useRef 都可以保存状态：
 
 
 
-#### 举例：倒计时
+### 举例：倒计时
 
 ```js
 import { useState, useEffect, useRef } from "react";
@@ -695,9 +858,7 @@ export function useCountdown(initialSeconds, autoStart = false) {
 }
 ```
 
-
-
-#### 举例：自动上报 pv/click 的埋点 hooks
+### 举例：自动上报 pv/click 的埋点 hooks
 
 实现一个能够自动上报 点击事件 | pv 的自定义 hooks 。通过这个自定义 hooks ，将带来的收获是：
 
@@ -728,11 +889,72 @@ export function useCountdown(initialSeconds, autoStart = false) {
 
 - **Props 变更**：Hook 依赖于外部传入的props时，使用`rerender（模拟组件重渲染）` 函数来模拟组件的重渲染
 
-- **异步逻辑**：包含异步操作，Mock真实请求，使
+- **异步逻辑**：包含异步操作，Mock真实请求，使用`waitFor（处理异步断言）` 等异步工具
 
-  用`waitFor（处理异步断言）` 等异步工具
+## React 15/16/17/18 的架构有什么区别
 
-## React18 UseId
+React渲染页面的两个阶段
+
+- 调度阶段（reconciliation）：在这个阶段 React 会更新数据生成新的 Virtual DOM，然后通过Diff算法，快速找出需要更新的元素，放到更新队列中去，**得到新的更新队列**。
+- 渲染阶段（commit）：这个阶段 React 会遍历更新队列，**将其所有的变更一次性更新到DOM上**。
+
+**React15 架构**
+
+React15 架构可以分为两层：
+
+- Reconciler（协调器）—— 负责找出变化的组件；
+- Renderer（渲染器）—— 负责将变化的组件渲染到页面上；
+
+在 React15 及以前，Reconciler 采用递归的方式创建虚拟 DOM，**递归过程是不能中断的**。如果组件树的层级很深，递归会占用线程很多时间，递归更新时间超过了16ms，用户交互就会卡顿。
+
+为了解决这个问题，React16 将递归的无法中断的更新重构为**异步的可中断更新**，由于曾经用于递归的虚拟 DOM数据结构已经无法满足需要。于是，全新的 Fiber 架构应运而生。
+
+**React 16 架构**
+
+为了解决同步更新长时间占用线程导致页面卡顿的问题，也为了探索运行时优化的更多可能，React 开始重构并一直持续至今。重构的目标是实现 Concurrent Mode（并发模式）。
+
+从 v15 到 v16，React 团队花了两年时间将源码架构中的 Stack Reconciler 重构为 Fiber Reconciler。
+
+React16 架构可以分为三层：
+
+- Scheduler（调度器）—— **调度任务的优先级**，高优任务优先进入Reconciler；
+- Reconciler（协调器）—— 负责找出变化的组件：**更新工作从递归变成了可以中断的循环过程。Reconciler内部采用了Fiber的架构**；
+- Renderer（渲染器）—— 负责将变化的组件渲染到页面上。
+
+**React 17 优化**
+
+React16 的 expirationTimes 模型只能区分是否 >=expirationTimes 决定节点是否更新。React17 的 lanes 模型可以选定一个更新区间，并且动态的向区间中增减优先级，可以处理更细粒度的更新。
+
+Lane 用二进制位表示任务的优先级，方便优先级的计算（位运算），不同优先级占用不同位置的“赛道”，而且存在批的概念，优先级越低，“赛道”越多。高优先级打断低优先级，新建的任务需要赋予什么优先级等问题都是Lane 所要解决的问题。
+
+Concurrent Mode的目的是实现一套可中断/恢复的更新机制。其由两部分组成：
+
+- 一套协程架构：**Fiber Reconciler**
+- 基于协程架构的[启发式更新算法 (opens new window)](https://zhuanlan.zhihu.com/p/182411298)：控制协程架构工作方式的算法
+
+**React 18** 
+
+- React 18之前的渲染：`同步、阻塞式。`
+    - UI 卡顿：长时间占用主线程，界面无响应。
+    - 交互延迟：用户操作响应缓慢。
+    - 动画掉帧：无法及时绘制下一帧，动画不流畅。
+- **React 18 并发**：渲染过程`可中断、可调度。（避免长时间调用主进程）`
+    - 可中断性（Interruptibility）：渲染过程可以被打断。
+    - 优先级调度（Priority Scheduling）：React 能区分任务的紧急程度。
+    - 注意：并发非并行，JavaScript 仍是单线程，`并发是任务调度策略（分配主线程的任务）`。
+- 核心痛点：提升复杂操作下的用户体验。（输入框搜索展示列表）
+
+- **并发核心机制**：
+    - 可中断的渲染 （Interruptible Rendering）：可暂停、恢复或放弃渲染
+    - 时间分片（Time Slicing）：将工作分解成小块，间歇执行。
+    - 优先级调度（Priority Scheduling）：高优任务可打断低优任务。
+    - Transitions （ startTransition,useTransition）：标记非紧急更新。
+        - 通过新 API 如 startTransition 和和 useTransition 利用并发。
+        - 用startTransition标记非紧急 UI 更新（如数据获取后列表渲染）
+        - “标记为'过渡”的更新，React 会低优处理，允许被用户交互打断。
+    - UsedeferredValue：推迟值的更新，不阻塞当前渲染。
+
+#### React18 UseId
 
 面试回答
 
@@ -764,29 +986,9 @@ export function useCountdown(initialSeconds, autoStart = false) {
   - 推荐做法：调用一次 useId（）获取一个基础ID。
   - 派生ID：通过`为基础ID 添加有意义的、唯一的后缀来生成其他相关的ID`，这样更高效，且ID 间的关联性更清晰。
 
-## React18 并发特性
 
-- React 18之前的渲染：`同步、阻塞式。`
-  - UI 卡顿：长时间占用主线程，界面无响应。
-  - 交互延迟：用户操作响应缓慢。
-  - 动画掉帧：无法及时绘制下一帧，动画不流畅。
-- React 18 并发：渲染过程`可中断、可调度。（避免长时间调用主进程）`
-  - 可中断性（Interruptibility）：渲染过程可以被打断。
-  - 优先级调度（Priority Scheduling）：React 能区分任务的紧急程度。
-  - 注意：并发非并行，JavaScript 仍是单线程，`并发是任务调度策略（分配主线程的任务）`。
-- 核心痛点：提升复杂操作下的用户体验。（输入框搜索展示列表）
 
-- **并发核心机制**：
-  - 可中断的渲染 （Interruptible Rendering）：可暂停、恢复或放弃渲染
-  - 时间分片（Time Slicing）：将工作分解成小块，间歇执行。
-  - 优先级调度（Priority Scheduling）：高优任务可打断低优任务。
-  - Transitions （ startTransition,useTransition）：标记非紧急更新。
-    - 通过新 API 如 startTransition 和和 useTransition 利用并发。
-    - 用startTransition标记非紧急 UI 更新（如数据获取后列表渲染）
-    - “标记为'过渡”的更新，React 会低优处理，允许被用户交互打断。
-  - UsedeferredValue：推迟值的更新，不阻塞当前渲染。
-
-## React18 useTransition 和usedeferredValue
+#### React18 useTransition 和usedeferredValue
 
 - 区别
   - **控制点不同**
@@ -816,7 +1018,7 @@ export function useCountdown(initialSeconds, autoStart = false) {
   - 延迟版本的值会在紧急更新（如用户输入）完成后才会更新。
   - 核心：**提供一个值的“副本”，此副本的更新被推迟**，以避免阻塞主渲染。
 
-## Redux/Context API/Zustand/Jotai（原子化）
+## 全局状态管理:Redux/Context API/Zustand/Jotai（原子化）
 
 ###  React 内置方案简介
 
@@ -880,8 +1082,8 @@ export function useCountdown(initialSeconds, autoStart = false) {
 
 - 思想：
 
-  - 发布订阅思想: redux 可以作为发布订阅模式的一个具体实现。redux 都会创建一个 store ，里面保存了状态信息，改变 store 的方法 dispatch ，以及订阅 store 变化的方法 subscribe 。
-  - 中间件思想:  强化 dispatch ，传统的 dispatch 是不支持异步的，但是可以针对 Redux 做强化，于是有了 `redux-thunk`，`redux-actions` 等中间件(通过applyMiddleware 注册)，包括 dvajs 中，也写了一个 redux 支持 promise 的中间件。
+  - **发布订阅思想**: redux 可以作为发布订阅模式的一个具体实现。redux 都会创建一个 store ，里面保存了状态信息，改变 store 的方法 dispatch ，以及订阅 store 变化的方法 subscribe 。
+  - **中间件思想**:  强化 dispatch ，传统的 dispatch 是不支持异步的，但是可以针对 Redux 做强化，于是有了 `redux-thunk`，`redux-actions` 等中间件(通过applyMiddleware 注册)，包括 dvajs 中，也写了一个 redux 支持 promise 的中间件。
 
 - **原理**：
 
@@ -896,8 +1098,6 @@ export function useCountdown(initialSeconds, autoStart = false) {
     - 就是 Subscription 通知的是 checkForUpdates 函数，checkForUpdates 会形成新的 props ，与之前缓存的 props 进行浅比较，如果不想等，那么说明 state 已经变化了，直接触发一个useReducer 来更新组件。
 
   - <img src="https://jonny-wei.github.io/blog/images/react/redux3.png" alt="redux3" style="zoom:33%;" />
-
-    ### 
 
 ### Zustand
 
@@ -922,10 +1122,6 @@ export function useCountdown(initialSeconds, autoStart = false) {
 
   - **DevTools 体验较差**：
     - 调试工具的体验可能不如 Redux 完善，功能较为基础。
-
-
-
-
 
 ### 组件的强化方式
 
@@ -1135,42 +1331,6 @@ useRef）。
 
 **总结：** 页面中所有**输入类的 DOM** 如果是现用现取的称为**非受控组件**，而通过 `setState` 将输入的值维护到了 `state` 中，需要时再从`state` 中取出，这里的数据就受到了 `state` 的控制，称为**受控组件**。
 
-## React生命周期(泪组建)
-
-<img src="%E5%89%8D%E7%AB%AF%E9%9D%A2%E7%BB%8F.assets/Image%20(23).png" alt="Image.png" style="zoom: 33%;" />
-
-### 一、挂载阶段（Mount）
-
-- **constructor**：初始化 state、绑定事件、节流防抖、从路由取参数。
-- **getDerivedStateFromProps**（静态方法）：将 props 映射到 state（初始化 & 更新都会触发）。
-- **render**：纯函数，返回 React Element，禁止在这里直接操作 DOM 或调用 setState。
-- **componentDidMount**：DOM 已经挂载，可进行 DOM 操作、事件监听、数据请求。
-
-**Hooks 对应**
-
-`useEffect(() => { ... }, [])` → 相当于 componentDidMount（空依赖只执行一次）。
-
-### **二、更新阶段（Update）**
-
-- **getDerivedStateFromProps**：props 变化时映射到 state。
-- **shouldComponentUpdate**：性能优化，返回 false 可阻止渲染。
-- **render**：重新渲染虚拟 DOM。
-- **getSnapshotBeforeUpdate**：获取 DOM 更新前的快照（滚动位置等）。
-- **componentDidUpdate**：DOM 已更新，可操作最新 DOM；需防止 setState 死循环。
-
-**Hooks 对应**
-
-- `useEffect(() => { ... })` → 相当于 componentDidUpdate + componentDidMount。
-- `useLayoutEffect` → 同步执行，适合测量和同步 DOM。
-
-### **三、卸载阶段（Unmount）**
-
-- **componentWillUnmount**：清理定时器、取消请求、移除事件监听。
-
-**Hooks 对应**
-
-`useEffect(() => { return () => { ... } }, [])` → 清理函数相当于 componentWillUnmount。
-
 ## HOC
 
 高阶组件（HOC）是 React 中用于**复用组件逻辑**的一种高级技巧。它是一种 React 的组合特性而形成的设计模式（该函数接受一个组件作为参数，并返回一个新的组件）。
@@ -1349,7 +1509,7 @@ useRef）。
     - 开发者在哈希路由模式下的应用中，切换路由，本质上是改变 `window.location.hash` 。
     - 监听路由：hash 路由模式下，监听路由变化用的是 hashchange
 
-受保护的路由
+**受保护的路由**
 
 - 清晰定义：首先说明什么是 Protected Route 及其作用。
 - 核心机制：解释认证检查和条件重定向的逻辑。
@@ -1453,30 +1613,6 @@ useRef）。
   - 控制权：UI直接控制 vs. 通过API间接影响
   - 复杂度：服务端状态管理通常更复杂（缓存、同步、过期、错误处
 
-
-### 请解释一下 REACT 18 的并发渲染是如何优化 HYDRATION 过程的？
-
-- 点出传统痛点：
-
-  - “全有或全无”（等 js 全部加载完）的注水模式。
-
-  - 同步阻塞导致页面无响应（TTI差）。
-
-- 引入并发特性：
-  - 并发渲染允许 React任务可中断、可恢复。
-  -  Hydration 因此可以被拆分成小任务。
-
-- 连接两大新功能：
-
-  - 流式 SSR+<Suspense>：HTML 分块流式到
-
-  达，内容提前可见。
-
-  -  选择性注水：
-    -  JS加载不再阻塞所有组件的注水。
-    - 用户交互可以触发高优先级的注水，优先响应用户。
-    - 低优先级组件（如屏幕外组件）的注水可以稍后进行，甚至在浏览器空闲时进行。
-
 ## RTL React 测试理念
 
 阐述核心理念：“像用户一样测试”，关注软件的实际使用行为，而不是内部实现细节。
@@ -1495,150 +1631,6 @@ useRef）。
 - **信心更足**：测试通过，代表用户真实操作流程没问题。
 - **重构友好**：只要功能不变，内部实现任意改，测试无需变动。
 - **促进可访问性**：自然地引导开发者写出更accessible的代码。
-
-## Fiber
-
-### Q1. 为什么设计 Fiber，React 为什么需要 Fiber ？
-
-React V15 在渲染时，会递归比对 VirtualDOM 树，找出需要变动的节点，然后同步更新它们， 一气呵成。这个过程期间， React 会占据浏览器资源，这会导致用户触发的事件得不到响应，并且会导致掉帧，**导致用户感觉到卡顿**。
-
-- **递归对比虚拟 DOM 树，执行栈会越来越深。（没办法中断，用户会感觉卡顿）**
-- **同步更新DOM，不能中断，中断后也不能恢复。**
-- **JS 代码执行时间长，会持续占用主线程，出现渲染卡顿。**
-
-当遇到进程同步阻塞的问题时，**任务分割、异步调用** 和 **缓存策略** 是三个显著的解决思路。因此，为了解决以上的痛点问题，React 设计了 Fiber 架构**， 把更新、渲染过程拆分为一个个小块的任务，通过合理的调度机制来调控时间，指定任务执行的时机，实现异步可中断执行，从而降低页面卡顿的概率，提升页面交互体验。**通过 Fiber 架构，让 reconcilation（调和） 过程变得可被中断，适时地让出 CPU 执行权，可以让浏览器及时地响应用户的交互。（就是使 JS 的执行变成可控，不希望 JS 不受控制地长时间执行）。
-
-Fiber 的主要目标是实现虚拟 DOM 的增量渲染，**能够将渲染工作拆分成块并将其分散到多个帧的能力。在新的更新到来时，能够暂停、中止和复用工作，能为不同类型的更新分配优先级顺序的能力**，因此 这种 Fiber reconciler 很好的解决了Stack Reconciler 的问题。
-
-- Fiber 是一种调度机制，在渲染的时候让执行过程（浏览器的渲染布局、绘制、事件响应、脚本执行等进程）变得可以中断，合理调度 CPU 资源响应用户操作。
-  - 优点
-    - 分批延时操作 DOM
-    - 对代码进行编译优化与热代码优化/reflow 修正
-
-### Q2. Fiber 为什么设计成链表结构？为什么中断执行后可以恢复？
-
-fiber 对象中存储的元素上下文信息以及指针域构成的链表结构，使其能够**将执行到一半的工作保存在内存的链表中**。当 React 停止并完成保存的工作后，让出时间片去处理一些其他优先级更高的事情。之后，在重新获取到可用的时间片后，它能够根据之前保存在内存的上下文信息通过快速遍历的方式找到停止的 fiber 节点并继续工作。由于在此阶段执行的工作并不会导致任何用户可见的更改，因为并没有被提交到真实的 DOM。所以，**这种链表结构的 fiber 能让让调度能够实现暂停、中止以及重新开始等增量渲染的能力。**
-
-### Q3. React Fiber 是如何实现更新过程可控？执行流程？
-
-更新过程的可控主要体现在下面几个方面：
-
-- 任务拆分
-- 任务挂起、恢复、终止
-- 任务具备优先级
-
-**任务拆分**
-
-在 React Fiber 机制中，它采用"化整为零"的思想，将**调和阶段（Reconciler）递归遍历 VDOM 这个大任务分成若干小任务**，每个任务只负责一个节点的处理。
-
-**任务挂起、恢复、终止**
-
-**workInProgress tree**： workInProgress 代表**当前正在执行更新的 Fiber 树**。在 render 或者 setState 后，会构建一颗 Fiber 树，也就是 workInProgress tree，这棵树在构建每一个节点的时候会收集当前节点的副作用，整棵树构建完成后，会形成一条完整的副作用链。
-
-**currentFiber tree**：currentFiber 表示**上次渲染构建的 Filber 树**。在每一次更新完成后 workInProgress 会赋值给 currentFiber。在新一轮更新时 workInProgress tree 再重新构建，新 workInProgress 的节点通过 alternate 属性和 currentFiber 的节点建立联系。
-
-在新 **workInProgress tree 的创建过程中，会同 currentFiber 的对应节点进行 Diff 比较，收集副作用**。同时也会复用和 currentFiber 对应的节点对象，减少新创建对象带来的开销。也就是说无论是创建还是更新、挂起、恢复以及终止操作都是发生在 workInProgress tree 创建过程中的。workInProgress tree 构建过程其实就是循环的执行任务和创建下一个任务。
-
-**挂起**
-
-当**第一个小任务完成后，先判断这一帧是否还有空闲时间，没有就挂起下一个任务的执行**，记住当前挂起的节点，让出控制权给浏览器执行更高优先级的任务。
-
-**恢复**
-
-**在浏览器渲染完一帧后，判断当前帧是否有剩余时间，如果有就恢复执行之前挂起的任务。**如果没有任务需要处理，代表调和阶段完成，可以开始进入渲染阶段。
-
-1. 如何判断一帧是否有空闲时间的呢？
-
-使用前面提到的 RIC (RequestIdleCallback) 浏览器原生 API，React 源码中为了兼容低版本的浏览器，对该方法进行了 Polyfill。
-
-1. 恢复执行的时候又是如何知道下一个任务是什么呢？
-
-答案是在前面提到的链表。在 React Fiber 中每个任务其实就**是在处理一个 FiberNode 对象，然后又生成下一个任务需要处理的 FiberNode。**
-
-**终止**
-
-其实并不是每次更新都会走到提交阶段。当在调和过程中触发了新的更新，在执行下一个任务的时候，判断是否有优先级更高的执行任务，如果有就终止原来将要执行的任务，开始新的 workInProgressFiber 树构建过程，开始新的更新流程。这样可以避免重复更新操作。这也是在 React 16 以后生命周期函数 componentWillMount 有可能会执行多次的原因。
-
-### Q4. React 能否像 Vue 那样进行预编译优化
-
-Vue3.0 提出动静结合的 DOM diff 思想，动静结合的 DOM diff其实是在预编译阶段进行了优化。之所以能够做到**预编译优化**，是因为 Vue core 可以**静态分析 template**，在解析模版时，整个 parse 的过程是利用**正则表达式**顺序解析模板，当解析到开始标签、闭合标签和文本的时候都会分别执行对应的回调函数，来达到构造 AST 树的目的。
-
-**借助预编译过程**，Vue 可以做到的预编译优化就很强大了。比如在预编译时标记出模版中可能变化的组件节点，再次进行渲染前 diff 时就可以**跳过“永远不会变化的节点”**，而只需要对比“可能会变化的动态节点”。这也就是**动静结合的 DOM diff 将 diff 成本与模版大小正相关优化到与动态节点正相关的理论依据**。
-
-Vue 需要做数据双向绑定，需要进行数据拦截或代理，那它就需要在**预编译阶段静态分析模版，分析出视图依赖了哪些数据，进行响应式处理**。而 React 就是**局部重新渲染**，React 拿到的或者说掌管的，所负责的就是一堆**递归 React.createElement** 的执行调用（参考下方经过Babel转换的代码），它无法从模版层面进行静态分析。[JSX 和手写的 render function是完全动态的，**过度的灵活性导致运行时可以用于优化的信息不足**。
-
-- JSX 具有 JavaScript 的完整表现力，可以构建非常复杂的组件。但是**灵活**的语法，也意味着**引擎难以理解**，无法预判开发者的用户意图，从而难以优化性能。
-- Template 模板是一种非常有**约束**的语言，你只能以某种方式去编写模板。
-
-既然存在以上**编译时先天不足**，在运行时优化方面，React 一直在努力。比如，React15 实现了 batchedUpdates（批量更新）。即**同一事件回调函数上下文**中的多次 setState 只会触发一次更新。但是，如果单次更新就很耗时，页面还是会卡顿（这在一个维护时间很长的大应用中是很常见的）。这是因为 React15 的更新流程是同步执行的，一旦开始更新直到页面渲染前都不能中断。
-
-### Q5. React hooks 的实现必须依赖 Fiber 吗?
-
-React 的 hooks 是在 fiber 之后出现的特性，所以很多人误以为 hooks 是必须依赖 fiber 才能实现的，其实并不是，它们俩**没啥必然联系。**
-
-在 React16 之前，会递归渲染这个 vdom，增删改真实 dom。而在 React16 引入了 fiber 架构之后就多了一步：首先把 vdom 转成 fiber，之后再渲染 fiber。**vdom 转 fiber 的过程叫做 reconcile**，最后增删改真实 dom 的过程叫做 commit。因为 vdom 只有子节点 children 的引用，没有父节点 parent 和其他兄弟节点 sibling 的引用，这导致了要一次性递归把所有 vdom 节点渲染到 dom 才行，不可打断。万一打断了会怎么样呢？因为没有记录父节点和兄弟节点，那只能继续处理子节点，却不能处理 vdom 的其他部分了。所以 React 才引入了这种 fiber 的结构，也就是有父节点 return、子节点 child、兄弟节点 sibling 等引用，可以打断，因为断了再恢复也能找到后面所有没处理过的节点。
-
-所以 fiber 架构就分为了 schdule、reconcile（vdom 转 fiber）、commit（更新到 dom）三个阶段。
-
-函数组件内可以用 hooks 来存取一些值，这些值就是存在 fiber 节点上的。不同的 hook 在 memorizedState 链表不同的元素上存取值，通过 next 串联起来，这就是 react hooks 的原理。
-
-### Q6. React 15/16/17 的架构有什么区别
-
-React渲染页面的两个阶段
-
-- 调度阶段（reconciliation）：在这个阶段 React 会更新数据生成新的 Virtual DOM，然后通过Diff算法，快速找出需要更新的元素，放到更新队列中去，**得到新的更新队列**。
-- 渲染阶段（commit）：这个阶段 React 会遍历更新队列，**将其所有的变更一次性更新到DOM上**。
-
-**React15 架构**
-
-React15 架构可以分为两层：
-
-- Reconciler（协调器）—— 负责找出变化的组件；
-- Renderer（渲染器）—— 负责将变化的组件渲染到页面上；
-
-在 React15 及以前，Reconciler 采用递归的方式创建虚拟 DOM，**递归过程是不能中断的**。如果组件树的层级很深，递归会占用线程很多时间，递归更新时间超过了16ms，用户交互就会卡顿。
-
-为了解决这个问题，React16 将递归的无法中断的更新重构为**异步的可中断更新**，由于曾经用于递归的虚拟 DOM数据结构已经无法满足需要。于是，全新的 Fiber 架构应运而生。
-
-**React 16 架构**
-
-为了解决同步更新长时间占用线程导致页面卡顿的问题，也为了探索运行时优化的更多可能，React 开始重构并一直持续至今。重构的目标是实现 Concurrent Mode（并发模式）。
-
-从 v15 到 v16，React 团队花了两年时间将源码架构中的 Stack Reconciler 重构为 Fiber Reconciler。
-
-React16 架构可以分为三层：
-
-- Scheduler（调度器）—— **调度任务的优先级**，高优任务优先进入Reconciler；
-- Reconciler（协调器）—— 负责找出变化的组件：**更新工作从递归变成了可以中断的循环过程。Reconciler内部采用了Fiber的架构**；
-- Renderer（渲染器）—— 负责将变化的组件渲染到页面上。
-
-**React 17 优化**
-
-React16 的 expirationTimes 模型只能区分是否 >=expirationTimes 决定节点是否更新。React17 的 lanes 模型可以选定一个更新区间，并且动态的向区间中增减优先级，可以处理更细粒度的更新。
-
-Lane 用二进制位表示任务的优先级，方便优先级的计算（位运算），不同优先级占用不同位置的“赛道”，而且存在批的概念，优先级越低，“赛道”越多。高优先级打断低优先级，新建的任务需要赋予什么优先级等问题都是Lane 所要解决的问题。
-
-Concurrent Mode的目的是实现一套可中断/恢复的更新机制。其由两部分组成：
-
-- 一套协程架构：**Fiber Reconciler**
-- 基于协程架构的[启发式更新算法 (opens new window)](https://zhuanlan.zhihu.com/p/182411298)：控制协程架构工作方式的算法
-
-### Q7. Concurrent Mode
-
-Concurrent Mode 指的就是 React 利用上面 Fiber 带来的新特性的开启的新模式 (mode)。react17开始支持concurrent mode，这种模式的根本目的是为了让应用保持cpu和io的快速响应，它是一组新功能，包括Fiber、Scheduler、Lane，可以根据用户硬件性能和网络状况调整应用的响应速度，核心就是为了实现异步可中断的更新。concurrent mode也是未来react主要迭代的方向。
-
-目前 React 实验版本允许用户选择三种 mode：
-
-1. Legacy Mode: 就相当于目前稳定版的模式
-2. Blocking Mode: 应该是以后会代替 Legacy Mode 而长期存在的模式
-3. Concurrent Mode: 以后会变成 default 的模式
-
-Concurrent Mode 其实开启了一堆新特性，其中有两个最重要的特性可以用来解决我们开头提到的两个问题：
-
-1. [Suspense (opens new window)](https://juejin.cn/post/6844903981999718407)：Suspense 是 React 提供的一种异步处理的机制, 它不是一个具体的数据请求库。它是React 提供的原生的组件异步调用原语。
-2. [useTrasition (opens new window)](https://juejin.cn/post/6844903986420514823)：让页面实现 Pending -> Skeleton -> Complete 的更新路径, 用户在切换页面时可以停留在当前页面，让页面保持响应。 相比展示一个无用的空白页面或者加载状态，这种用户体验更加友好。
-
-其中 Suspense 可以用来解决请求阻塞的问题，UI 卡顿的问题其实开启 concurrent mode 就已经解决的，但如何利用 concurrent mode 来实现更友好的交互还是需要对代码做一番改动的。
 
 ## React 优先级管理
 
