@@ -1,0 +1,135 @@
+<h2>任务管理看板 — 课件改造概览</h2>
+<p class="subtitle">当前课件以「校园 3D 漫游」为实验项目，需改为「任务管理看板」</p>
+
+<div class="section">
+  <h3>当前课件结构（9 个模块 Section）</h3>
+  <div class="mockup">
+    <div class="mockup-body">
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;">
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">Hero</span>
+          <span>AI vs 传统开发 — 两张流程图大图</span>
+        </div>
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">课程概览</span>
+          <span>目标 / 对象 / 课时 / 先修</span>
+        </div>
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">模式对比</span>
+          <span>传统 vs AI + 耗时柱状图（Recharts）</span>
+        </div>
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">Vibe Coding</span>
+          <span>Claude Code / Harness / Superpowers 介绍卡片</span>
+        </div>
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">Superpowers</span>
+          <span>技能生态 — 按阶段展开的技能卡片</span>
+        </div>
+
+        <!-- Highlight: these 3 sections are the main targets -->
+        <div style="background:#fef3c7;padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;border:2px solid #f59e0b;">
+          <span style="background:#f59e0b;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">实验项目 ⚡</span>
+          <span><strong>校园 3D 漫游</strong> · react-three-fiber · Express · Prisma</span>
+        </div>
+        <div style="background:#fef3c7;padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;border:2px solid #f59e0b;">
+          <span style="background:#f59e0b;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">实验手册 ⚡</span>
+          <span><strong>9 阶段实操</strong> · 所有提示词含 Three.js · 从脚手架到部署</span>
+        </div>
+        <div style="background:#fef3c7;padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;border:2px solid #f59e0b;">
+          <span style="background:#f59e0b;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">考核评估 ⚡</span>
+          <span>评分量规提到「3D 场景可加载」</span>
+        </div>
+
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">课程讲义 ⚡</span>
+          <span>两份 HTML 讲义（概念 + 实验手册）· 标题含「3D 漫游」</span>
+        </div>
+        <div style="background:var(--card);padding:8px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;">
+          <span style="background:#7c3aed;color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;">Footer</span>
+          <span>页脚信息</span>
+        </div>
+      </div>
+      <p style="margin-top:12px;font-size:13px;color:var(--muted-foreground);">⚡ = 需要改动的 Section，共 <strong>4 个</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>任务管理看板（Kanban）能做什么？</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">前端 React</div>
+      <div class="mockup-body" style="font-size:13px;line-height:1.7;">
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;background:#f1f5f9;border-radius:8px;padding:8px;">
+            <div style="font-weight:600;font-size:12px;color:#64748b;margin-bottom:6px;">📋 待办</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;margin-bottom:4px;border:1px solid #e2e8f0;">设计登录页</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;margin-bottom:4px;border:1px solid #e2e8f0;">写 API 文档</div>
+          </div>
+          <div style="flex:1;background:#f1f5f9;border-radius:8px;padding:8px;">
+            <div style="font-weight:600;font-size:12px;color:#64748b;margin-bottom:6px;">🔄 进行中</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;margin-bottom:4px;border:1px solid #e2e8f0;">实现登录</div>
+          </div>
+          <div style="flex:1;background:#f1f5f9;border-radius:8px;padding:8px;">
+            <div style="font-weight:600;font-size:12px;color:#64748b;margin-bottom:6px;">✅ 完成</div>
+            <div style="background:#fff;border-radius:4px;padding:6px;margin-bottom:4px;border:1px solid #e2e8f0;">初始化仓库</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:#94a3b8;margin-top:8px;">拖拽移动卡片 · react-dnd (已安装)</p>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">后端 Express + Prisma</div>
+      <div class="mockup-body" style="font-size:13px;">
+        <pre style="background:#0f172a;color:#e2e8f0;padding:12px;border-radius:6px;font-size:12px;line-height:1.5;">
+GET    /boards/:id/columns
+POST   /columns/:id/tasks
+PATCH  /tasks/:id/move
+POST   /tasks/:id/comments</pre>
+        <p style="font-size:12px;color:#94a3b8;margin-top:8px;">Board → Column → Task → Comment 四表关系</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>与 3D 漫游的对比</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="text-align:left;padding:8px;">维度</th>
+      <th style="text-align:left;padding:8px;">3D 漫游</th>
+      <th style="text-align:left;padding:8px;background:#ecfdf5;">看板 ✅</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">前端复杂度</td>
+      <td style="padding:8px;">Three.js 学习曲线陡峭</td>
+      <td style="padding:8px;background:#ecfdf5;">纯 React 组件，react-dnd 上手快</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">后端接口</td>
+      <td style="padding:8px;">2 个资源、简单 CRUD</td>
+      <td style="padding:8px;background:#ecfdf5;">4 个资源、拖拽排序、更丰富的 API 设计</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">数据库 Schema</td>
+      <td style="padding:8px;">Building + Review</td>
+      <td style="padding:8px;background:#ecfdf5;">Board → Column → Task → Comment</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">学生兴趣</td>
+      <td style="padding:8px;">看场景，3D 可能劝退</td>
+      <td style="padding:8px;background:#ecfdf5;">实用工具，做完能用，成就感强</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">依赖情况</td>
+      <td style="padding:8px;">需额外装 three 系列</td>
+      <td style="padding:8px;background:#ecfdf5;">react-dnd 已安装，无需额外依赖</td>
+    </tr>
+    <tr>
+      <td style="padding:8px;">教学覆盖</td>
+      <td style="padding:8px;">全栈 + 3D</td>
+      <td style="padding:8px;background:#ecfdf5;">全栈 + 拖拽 + 状态管理 + 排序算法</td>
+    </tr>
+  </table>
+</div>

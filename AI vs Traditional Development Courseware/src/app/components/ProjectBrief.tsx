@@ -3,9 +3,9 @@ import { Badge } from "./ui/badge";
 import { Database, Server, MonitorSmartphone, Lightbulb } from "lucide-react";
 
 const alts = [
-  { title: "太阳系知识竞答", body: "围绕行星的 3D 场景，点击行星弹出问答，成绩持久化。" },
-  { title: "3D 作品集画廊", body: "在三维空间旋转的卡片，访客可以点赞和留言，数据保存到后端。" },
-  { title: "宿舍空间设计器", body: "拖拽家具到三维房间内，登录用户可保存自己的布局方案。" },
+  { title: "招聘需求看板", body: "HR 管理候选人，拖拽卡片在多轮面试间流转，数据持久化到后端。" },
+  { title: "课程作业追踪", body: "学生管理各科作业进度，按截止日期排序，完成后归档。" },
+  { title: "Bug 追踪面板", body: "开发团队管理缺陷，按优先级排列，分配修复人，标记已解决。" },
 ];
 
 export function ProjectBrief() {
@@ -14,10 +14,10 @@ export function ProjectBrief() {
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="mb-8">
           <Badge>模块 03 · 实验项目</Badge>
-          <h2 className="mt-2">校园 3D 漫游 Campus 3D Explorer</h2>
+          <h2 className="mt-2">TaskFlow — 极简任务流 Kanban</h2>
           <p className="text-muted-foreground">
-            一个为高校实验课量身定制的 Three.js 全栈项目：复杂度适中，既能完整跑通技术栈，又能在一次实验内完成。
-            学生在 3D 校园中飞行漫游，点击建筑查看介绍，并发表评价（数据写入真实数据库）。
+            一个支持多用户、自定义列的 Kanban 全栈应用，复杂度适中，既能完整跑通技术栈，又能在一次实验内完成。
+            学生输入用户名即可创建看板，拖拽卡片在列间流转，为任务添加标签、指派人、评论，数据全部写入真实数据库。
           </p>
         </div>
 
@@ -28,9 +28,9 @@ export function ProjectBrief() {
               <CardTitle>前端</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground space-y-3">
-              <p>React + react-three-fiber 构建场景，包含 OrbitControls、建筑模型、悬浮 HTML 标签，以及右侧详情/评价面板。</p>
+              <p>React + react-dnd 构建拖拽 Kanban，支持列增删、卡片拖拽排序、任务详情弹窗（标题/描述/优先级/截止日期/标签/指派人/评论），以及用户名登录。</p>
               <div className="flex flex-wrap gap-1.5">
-                {["React", "Vite", "react-three-fiber", "drei", "TailwindCSS"].map((s) => <Badge key={s} variant="outline">{s}</Badge>)}
+                {["React", "Vite", "react-dnd", "react-dnd-html5-backend", "TailwindCSS"].map((s) => <Badge key={s} variant="outline">{s}</Badge>)}
               </div>
             </CardContent>
           </Card>
@@ -40,7 +40,7 @@ export function ProjectBrief() {
               <CardTitle>后端</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground space-y-3">
-              <p>Express REST API，提供 <code>/buildings</code> 与 <code>/buildings/:id/reviews</code> 接口，支持输入校验与 CORS。</p>
+              <p>Express REST API，提供 <code>/boards</code>、<code>/columns</code>、<code>/tasks</code>、<code>/comments</code> 接口，支持拖拽排序持久化、输入校验与 CORS。</p>
               <div className="flex flex-wrap gap-1.5">
                 {["Node", "Express"].map((s) => <Badge key={s} variant="outline">{s}</Badge>)}
               </div>
@@ -52,7 +52,7 @@ export function ProjectBrief() {
               <CardTitle>数据库</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground space-y-3">
-              <p>Prisma 定义 <code>Building</code> 与 <code>Review</code> 两张表，本地用 SQLite，生产环境切换 PostgreSQL。</p>
+              <p>Prisma 定义 User → Board → Column → Task → Comment → Tag 六张表，本地用 SQLite，生产环境切换 PostgreSQL。</p>
               <div className="flex flex-wrap gap-1.5">
                 {["Prisma", "PostgreSQL"].map((s) => <Badge key={s} variant="outline">{s}</Badge>)}
               </div>

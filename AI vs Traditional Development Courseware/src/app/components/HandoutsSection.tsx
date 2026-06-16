@@ -56,7 +56,7 @@ export function HandoutsSection() {
           <Card>
             <CardHeader>
               <FlaskConical className="size-5 text-primary" />
-              <CardTitle>实验手册 — 校园 3D 漫游</CardTitle>
+              <CardTitle>实验手册 — TaskFlow 任务看板</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">

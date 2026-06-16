@@ -3,7 +3,7 @@ import { Badge } from "./ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
 const rubric = [
-  ["功能完整度", "30%", "3D 场景可加载，建筑可点击，评论可持久化。"],
+  ["功能完整度", "30%", "看板列可增删，卡片可拖拽排序，评论与标签可持久化。"],
   ["后端正确性", "20%", "API 校验输入并妥善处理异常。"],
   ["代码质量", "20%", "可读、类型完整、组织清晰，包含测试。"],
   ["AI 协作", "20%", "反思报告体现出有思考的提示词与审阅过程。"],

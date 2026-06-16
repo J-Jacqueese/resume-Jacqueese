@@ -30,66 +30,89 @@ claude doctor`,
     blurb: "用一段描述让 Agent 搭好整个 monorepo。",
     traditional: "手写 pnpm-workspace.yaml、两个 package.json 和 tsconfig 路径。",
     prompt: `初始化一个 pnpm monorepo，包含 apps/web（Vite + React + TS +
-react-three-fiber + drei + tailwind）和 apps/api（Node + Express +
+react-dnd + react-dnd-html5-backend + tailwind）和 apps/api（Node + Express +
 TS + Prisma + SQLite）。用 concurrently 让 'pnpm dev' 一键启动两者，
 并生成 README。`,
   },
   {
     id: "p2",
     title: "阶段 2 — 前端脚手架",
-    blurb: "搭建包含 5 栋可点击建筑的 3D 场景。",
-    traditional: "啃 three-fiber 文档，反复调相机和灯光。",
-    prompt: `在 apps/web 中创建一个全屏 Canvas，放置 5 个 Box 网格代表：
-图书馆、理科楼、艺术中心、体育馆、食堂。加入 OrbitControls。
-点击建筑时，弹出右侧 Tailwind 面板，展示名称与（之后接入的）评论。`,
+    blurb: "搭建可拖拽的三列 Kanban 看板布局。",
+    traditional: "读 react-dnd 文档，手写拖拽逻辑和状态管理。",
+    prompt: `在 apps/web 中创建一个三列 Kanban 看板（待办、进行中、完成），
+使用 react-dnd 实现卡片在列间拖拽移动。每列顶部显示列名，
+底部有"添加卡片"按钮。点击卡片弹出右侧 Tailwind 详情面板，
+显示标题和（之后接入的）评论。`,
   },
   {
     id: "p3",
     title: "阶段 3 — 后端脚手架",
-    blurb: "用 Express 暴露前端要调用的接口。",
+    blurb: "用 Express 暴露看板需要的全部接口。",
     traditional: "搭 Express 模板、配 CORS、串通 ts-node。",
     prompt: `在 apps/api 中启动 Express 服务，端口 4000，允许 http://localhost:5173
 跨域。提供以下路由：
-  GET  /buildings
-  GET  /buildings/:id/reviews
-  POST /buildings/:id/reviews   { author, rating, text }`,
+  GET    /boards/:userId
+  POST   /boards              { title }
+  GET    /boards/:id/columns
+  POST   /columns              { boardId, title }
+  DELETE /columns/:id
+  GET    /columns/:id/tasks
+  POST   /tasks                { columnId, title }
+  PATCH  /tasks/:id/move       { targetColumnId, position }
+  PATCH  /tasks/:id            { title?, description?, priority?, dueDate?, assignee? }
+  GET    /tasks/:id/comments
+  POST   /tasks/:id/comments   { author, text }`,
   },
   {
     id: "p4",
     title: "阶段 4 — 数据库 Schema 与迁移",
-    blurb: "建模 Building 与 Review，执行迁移并填充种子数据。",
+    blurb: "建模 User → Board → Column → Task → Comment → Tag，执行迁移并填充种子数据。",
     traditional: "手写 SQL 迁移、调试外键。",
     prompt: `创建 Prisma 模型：
-Building(id, slug 唯一, name, blurb)
-Review(id, buildingId 外键, author, rating Int, text, createdAt)
-执行 prisma migrate dev --name init，并写入 5 栋建筑的种子数据。`,
+User(id, name 唯一, createdAt)
+Board(id, title, userId FK, createdAt)
+Column(id, boardId FK, title, position Int, createdAt)
+Task(id, columnId FK, title, description?, priority Enum(LOW/MEDIUM/HIGH),
+  dueDate?, assignee?, position Int, createdAt)
+Comment(id, taskId FK, author, text, createdAt)
+Tag(id, name 唯一)
+TaskTag(taskId FK, tagId FK)
+执行 prisma migrate dev --name init，并写入种子数据：1 个用户 + 1 个看板 + 3 列 + 若干示例任务。`,
   },
   {
     id: "p5",
     title: "阶段 5 — 前后端联调",
-    blurb: "通过类型化 client，把侧边栏接入真实数据。",
+    blurb: "通过类型化 client，把 Kanban 接入真实 API。",
     traditional: "手写 fetch 封装，手敲响应类型。",
     prompt: `在 apps/web/src/api.ts 中实现一个类型化的 API client，
-指向 http://localhost:4000。点击建筑时拉取其评论并渲染在右侧面板。
-添加 POST 评论的表单，提交后乐观更新评论列表。`,
+指向 http://localhost:4000。看板加载时拉取列和任务，渲染到 Kanban 中。
+拖拽卡片到新列后调用 PATCH /tasks/:id/move 持久化列和位置。
+添加列功能调用 POST /columns，删除列调用 DELETE /columns/:id。
+任务详情面板中的编辑操作同步到后端。`,
   },
   {
     id: "p6",
     title: "阶段 6 — 迭代打磨",
     blurb: "用一连串小提示打磨体验。",
     traditional: "提交大量小 commit，频繁上下文切换。",
-    prompt: `给每栋建筑分配独立颜色，并使用 drei 的 <Html> 添加一个始终
-朝向相机的悬浮标签。评论表单增加 1–5 星评分输入（用 lucide-react 的
-Star 图标）。评论加载时显示骨架屏。`,
+    prompt: `给每列分配独立颜色条（待办=蓝、进行中=黄、完成=绿）。
+任务卡片显示优先级角标（红/橙/灰）和截止日期。
+任务详情面板增加：标签输入（TagInput，可新建/删除标签）、
+指派人输入、评论列表 + 发表评论表单。
+评论加载时显示骨架屏。`,
   },
   {
     id: "p7",
     title: "阶段 7 — 测试与调试",
     blurb: "让 Agent 写测试并定位失败。",
     traditional: "手写 vitest 用例，追踪闪烁的测试。",
-    prompt: `为 apps/api 接入 vitest。为 POST /reviews 编写三类测试：
-正常路径、缺少评分、建筑不存在。使用独立的测试 SQLite 文件。
-在根目录串通 'pnpm test'。提交前运行 /code-review。`,
+    prompt: `为 apps/api 接入 vitest。编写以下测试：
+1. POST /columns — 正常创建、缺少 boardId 返回 400
+2. PATCH /tasks/:id/move — 拖拽到另一列、缺少 targetColumnId 返回 400
+3. POST /tasks/:id/comments — 正常添加评论、空文本返回 400
+4. GET /boards/:id/columns — 列按 position 排序
+使用独立的测试 SQLite 文件。在根目录串通 'pnpm test'。
+提交前运行 /code-review。`,
   },
   {
     id: "p8",

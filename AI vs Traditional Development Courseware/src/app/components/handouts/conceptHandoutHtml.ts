@@ -101,8 +101,8 @@ export const conceptHandoutHtml = `<!doctype html>
   <h2>7. 延伸阅读</h2>
   <ul>
     <li>Anthropic — Claude Code 官方文档</li>
-    <li>Three.js 基础 — threejs.org</li>
-    <li>React Three Fiber — docs.pmnd.rs</li>
+    <li>React DnD — react-dnd.github.io</li>
+    <li>Prisma ORM — prisma.io</li>
   </ul>
 
   <footer>由 Vibe Coding 教学课件生成 · 可自由分发用于教学目的。</footer>

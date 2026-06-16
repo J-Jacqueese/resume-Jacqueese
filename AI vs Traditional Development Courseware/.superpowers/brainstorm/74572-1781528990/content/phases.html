@@ -1,0 +1,102 @@
+<h2>实验手册 — 9 阶段重写对比</h2>
+<p class="subtitle">左栏：旧版 3D 漫游 | 右栏：新版 TaskFlow 看板</p>
+
+<div class="section">
+  <h3>阶段 0-3：环境搭建 → 前后端脚手架</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <tr style="background:var(--muted);">
+      <th style="text-align:left;padding:8px;width:8%;">#</th>
+      <th style="text-align:left;padding:8px;width:46%;">旧：3D 漫游</th>
+      <th style="text-align:left;padding:8px;width:46%;">新：TaskFlow 看板</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P0</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">安装 Node / pnpm / Claude Code / Superpowers</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">✅ 保持不变（通用环境准备）</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P1</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">monorepo + <strong>react-three-fiber + drei</strong></td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">monorepo + <strong>react-dnd + react-dnd-html5-backend</strong>（已安装）</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P2</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">全屏 Canvas + 5 个 Box 建筑 + OrbitControls</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;"><strong>三列 Kanban 布局</strong> + 创建/删除列 + 拖拽移动卡片</td>
+    </tr>
+    <tr>
+      <td style="padding:8px;">P3</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">Express /buildings + /reviews 路由</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">Express <strong>/boards /columns /tasks /comments</strong> + CORS</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>阶段 4-6：数据库 → 联调 → 打磨</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <tr style="background:var(--muted);">
+      <th style="text-align:left;padding:8px;width:8%;">#</th>
+      <th style="text-align:left;padding:8px;width:46%;">旧：3D 漫游</th>
+      <th style="text-align:left;padding:8px;width:46%;">新：TaskFlow 看板</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P4</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">Prisma: Building + Review 两表</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">Prisma: <strong>User → Board → Column → Task → Comment → Tag</strong> 六表 + 种子数据</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P5</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">fetch 封装 + 建筑点击拉取评论</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">API client + <strong>拖拽后乐观更新列顺序</strong> + 任务 CRUD 面板</td>
+    </tr>
+    <tr>
+      <td style="padding:8px;">P6</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">建筑颜色 + Html 悬浮标签 + 骨架屏</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;"><strong>任务详情弹窗</strong>：标题/描述/优先级/截止日期/<strong>标签/指派人/评论</strong> + 骨架屏</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>阶段 7-8：测试 → 部署</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <tr style="background:var(--muted);">
+      <th style="text-align:left;padding:8px;width:8%;">#</th>
+      <th style="text-align:left;padding:8px;width:46%;">旧：3D 漫游</th>
+      <th style="text-align:left;padding:8px;width:46%;">新：TaskFlow 看板</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:8px;">P7</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">vitest: POST /reviews 三类测试</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">vitest: <strong>拖拽排序 + 列 CRUD + 评论 + 优先级校验</strong></td>
+    </tr>
+    <tr>
+      <td style="padding:8px;">P8</td>
+      <td style="padding:8px;font-size:12px;color:var(--muted-foreground);">Vercel + Render + PostgreSQL</td>
+      <td style="padding:8px;background:#ecfdf5;font-size:12px;">✅ 基本不变（通用部署流程）</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>关键变化总结</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>P0、P3、P7、P8 基本不变</h4>
+      <ul>
+        <li>环境准备、部署流程是通用的</li>
+        <li>仅替换资源名（buildings → columns/tasks）</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>P1、P2、P4、P5、P6 重写</h4>
+      <ul>
+        <li>Three.js → react-dnd Kanban</li>
+        <li>2 表 → 6 表 Schema</li>
+        <li>3D 交互 → 拖拽 + 详情面板</li>
+        <li>悬浮标签 → 任务编辑弹窗</li>
+      </ul>
+    </div>
+  </div>
+</div>
