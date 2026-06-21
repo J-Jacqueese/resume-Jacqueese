@@ -17,17 +17,85 @@
 
 前端技术栈以**React** 为主，熟悉基本的前端工具、AI工具cc等使用辅助开发。
 
-对前端技术、AI 结合业务场景的落地有浓厚兴趣，希望未来能在技术深度和业务价值上持续深耕。谢谢。
+## 数据分析和报表生成 Agent？
 
-**Interviewer, hello! My name is Wang Yu. I graduated with a master's degree in Artificial Intelligence from Northeastern University, specializing in spatiotemporal sequence prediction. During my graduate studies, I published a paper as the second author in a Q2 SCI journal on typhoon path prediction. Currently, I work as a Front-end Development Engineer at Beike, specifically in the payment center, where I am mainly responsible for front-end development related to performance fulfillment.**
+**系统设计目标：** 用户用自然语言提问，Agent 自动查询数据库/数据源，生成分析结论和可视化图表。
 
-**In the projects I've participated in, I worked on the Government Deposit H5 project, where I completed the entire front-end development lifecycle and performance optimization from scratch. In the Protocol Platform, I implemented template dynamic compilation and rendering, improving business configuration efficiency and reducing testing costs. In the Data Platform, I rewrote the Text2SQL module based on the Vanna framework, integrated it with Tencent's vector database for retrieval and segmentation, and designed the backend architecture using FastAPI, which significantly enhanced business efficiency and facilitated AI capabilities.**
+**核心架构（三阶段）：**
 
-**My front-end technology stack primarily includes Vue and React, and I am familiar with HTML, CSS, JavaScript, and ES6. I also have a good grasp of common tools and libraries such as Webpack/Vite for build processes and Git for version management.**
+① 自然语言 → SQL 查询（NL2SQL）
 
-**Additionally, I possess a foundational understanding of AI and am familiar with machine learning libraries such as PyTorch and pandas. For instance, I worked on a project predicting property mortgage amounts, which resulted in a saving of 2,900 hours of human efficiency and a 27% improvement in visit rates.**
+用 LLM 做意图理解和 SQL 生成。关键挑战：
 
-**I have a keen interest in integrating front-end technology with AI in business scenarios and hope to continue growing in both technical depth and business value in the future. Thank you.**
+- 表结构理解：把数据库 schema（表名、字段、含义）注入 prompt，让 LLM 理解能查什么。
+- SQL 正确性：生成的 SQL 必须做语法校验，执行前 review，高风险 SQL（如全表扫描、大量删除）需要二次确认。
+- 防注入：用户输入不做字符串拼接，用参数化查询。
+
+流程：`用户Query → 意图识别 → Schema匹配 → SQL生成 → 语法校验 → 执行 → 结果`
+
+② 数据分析与洞察生成
+
+查询结果返回后，LLM 分析数据特征：
+
+- 趋势判断（上升/下降/平稳）
+- 异常点检测（远超均值的数值）
+- 对比分析（同期环比、同比）
+- 归因推断（什么原因导致）
+
+输出结构化分析结论，语言简洁、可直接引用。
+
+③ 报表生成与自动化
+
+支持定时任务：设置"每周一生成上周经营日报"，Agent 自动执行查询+分析+发送邮件/钉钉消息。
+
+可视化：用 Python/Matplotlib 或 ECharts 生成图表，嵌入到 HTML/PDF 报告。
+
+**异动分析方法论:** 分析交易转化异动的原因「解决高维复杂数据矩阵」
+
+![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756115677410-0d27e24e-c42c-4bcf-8e68-645b8849eb34.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756115677410-0d27e24e-c42c-4bcf-8e68-645b8849eb34.png)
+
+痛点:
+
+- 数据分析策略: 统计学+数据建模归因体系,继续时序变化点检测的方法对数据进行动态切片
+
+- AI产品选型不足:使用Langraph+蓝鲸(内部模型广场),手动流程搭建、分析策略、归因推理分析.
+
+- AI数据分析能力增强: “交易侧的流量异常分析方法论”
+
+      
+
+    交易侧的流量异常分析方法论
+
+    ![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756113774797-f00e71e9-be6f-48e6-89db-4e23d35bf54a.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756113774797-f00e71e9-be6f-48e6-89db-4e23d35bf54a.png)
+
+1. 异常时段定位：**我们采用基于时序数据变化点检测方法，对**数据进行动态切片**，捕捉异常波动的起止端点，让后续的分析能够聚焦于异常发生的真实时间窗口。对各个异常波动时段的**数据进行拟合[2]，确保数据对比分析具备科学性和有效性。
+2. **指标拆解归因：**将异常指标层层分解为过程指标。当顶层指标发生波动时，**计算各子指标的波动对总体波动的贡献度**，来定位关键的影响环节。具体来说，通过基于**偏导数的链式法则(输入变量的变动对结果贡献有多大)**[3]，将根指标变化分解为各子指标的线性叠加，来量化每个子指标对根指标异常的影响。
+3. **异动数据分析:** 各个交易链路的影响因素是多样的，我们基于上述两个“组合拳”下钻指标进行异常检测。综合维度数据、**用户行为数据以及后端接口日志等多源数据**，对**异常指标进行关联性分析**，力求还原异常发生的全链路过程，为根因定位提供数据支撑。
+
+![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754924209483-128bc2b1-a2b0-4f6c-85f7-fcc099ae9349.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754924209483-128bc2b1-a2b0-4f6c-85f7-fcc099ae9349.png)
+
+多Agent编排
+
+**思路1: Muti-Agent (层次团队)**
+
+- 基于贴合业务域的成熟方法论，编排分析工作流。
+- 构建多智能体（Agent）协作体系，每个Agent专注于不同分析环节（如**流量异动、订单结构异动、支付异动、归因结果**等）。各Agent之间分工明确、层层协作，实现复杂任务高效拆解与协同，提升整体分析效率和可扩展性。
+- ![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754815919365-8bcb1bb6-fe04-4532-b37d-523b911cba28.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754815919365-8bcb1bb6-fe04-4532-b37d-523b911cba28.png)
+
+**思路2: Plan & Execute （计划与执行）**
+
+- 智能规划：根据输入目标（如异常检测、归因分析）自动生成分步执行方案，动态流程编排。
+- 高效执行：集成数据获取、异常检测、维度下钻等原子能力模块，通过任务流调度实现归因报告输出
+
+![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754925057478-ae0141a6-1a3e-4094-bd73-3f2b1b06e1b7.png?x-oss-process=image%2Fcrop%2Cx_20%2Cy_51%2Cw_1159%2Ch_765](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754925057478-ae0141a6-1a3e-4094-bd73-3f2b1b06e1b7.png?x-oss-process=image%2Fcrop%2Cx_20%2Cy_51%2Cw_1159%2Ch_765)
+
+**质量保障机制：**
+
+- SQL 执行结果和用户期望不符时，LLM 自动重写 SQL（Self-Correction）。
+- 关键数据加"人工确认"环节再对外发送。
+- 记录所有 Query-SQL 对应关系，用于持续优化 Prompt。
+
+**总结口述：**"数据分析 Agent 的本质是'把 SQL 能力用自然语言暴露出来'。核心难点不是 LLM 生成 SQL，而是 Schema 理解和 SQL 正确性校验。生产环境我一定会加人工确认节点，AI 辅助而非 AI 全权决策。"
 
 ## AI订单起草
 
@@ -622,27 +690,46 @@ Harness Control（沙箱、工具、上下文、trace、eval、权限）
 
 **错误恢复的核心思路：不要硬编码，告诉 LLM 让它自己判断。**
 
+-  第一，**模型调用层要先做错误分类**:
+    -  比如限流、超时、服务端错误的处理；上下文超限、模型不可用的处理 
+
+-  第二，**tool调用出错不能把 Agent 过程卡死**:
+
+    -  工具执行前要做参数校验、权限校验和超时控制；
+    - 执行失败后，最好把错误包装成结构化结果返回给模型，让模型可以调整参数、换工具，或者向用户解释。 如果是写操作还必须考虑幂等性，避免重试导致重复执行等。
+
+-   第三，**要考虑中断和状态恢复**:
+
+    -  用户主动停止、网络断开、进程崩溃时，Agent 可以终止当前模型请求和工具调用，以及通过checkpoint 机制状态恢复。 多 Agent 场景下，子 Agent 也要记录自己的任务状态和结果。父 Agent 看到子任务失败后，可以选择重试、换 Agent、降级处理，或者请求人工介入。  
+
+-   第四，**要有可观测性和降级策略**: 
+
+    - 所有失败都要记录、同时也要有降级策略，比如切备用模型、切备用服务、从流式改成非流式，或者从自动执行切到人工确认。
+
+    
+
+-  最近学习了OpenClaw和Hermes的 他们的容错机制是 
+
+    - OpenClaw 更偏工程化运行时，它做了错误分类、模型兜底、超时中断、会话修复、写锁保护和子 Agent 恢复； 
+    - Hermes Agent 在模型服务商容错上更细，会根据错误决定是重试、压缩上下文、换凭证、切服务商，还是直接提示用户，并且对流式输出中断也做了保护，避免把用户主动停止误判成网络错误继续重试。
+
 **五种错误场景及处理方案：**
 
-① 工具参数错误
+- **工具参数错误**
+    - LLM 生成的参数格式不对或缺失必填参数。处理：工程侧做参数校验 + schema 约束，校验失败返回明确错误信息给 LLM："XX 参数缺失，有效值范围是..."，让 LLM 重新生成。
 
-LLM 生成的参数格式不对或缺失必填参数。处理：工程侧做参数校验 + schema 约束，校验失败返回明确错误信息给 LLM："XX 参数缺失，有效值范围是..."，让 LLM 重新生成。
+- **工具执行超时**
+    - API 调用超时（网络抖动、下游服务慢）。处理：设置合理的超时时间（一般 10-30s），超时后返回超时错误给 LLM，告诉它"工具调用超时，是否重试或换思路"。
 
-② 工具执行超时
+- **工具返回空结果**
+    - 检索没结果、查询无数据。处理：返回空结果给 LLM，告诉它"未找到相关信息，任务可能无法完成"或"建议调整查询条件"。
 
-API 调用超时（网络抖动、下游服务慢）。处理：设置合理的超时时间（一般 10-30s），超时后返回超时错误给 LLM，告诉它"工具调用超时，是否重试或换思路"。
+- **工具权限不足**
+    - 调用了没有权限的 API（读取私有数据）。处理：返回权限错误 + 可用工具列表，引导 LLM 选择替代方案。
 
-③ 工具返回空结果
+- **死循环检测**
+    - LLM 反复调用同一工具但每次结果相同。处理：设置最大循环次数（如 10 次），超过后强制终止并返回兜底答案。同时在循环中检测"最近 3 次 Action 是否完全相同"，相同则触发重试/终止逻辑。
 
-检索没结果、查询无数据。处理：返回空结果给 LLM，告诉它"未找到相关信息，任务可能无法完成"或"建议调整查询条件"。
-
-④ 工具权限不足
-
-调用了没有权限的 API（读取私有数据）。处理：返回权限错误 + 可用工具列表，引导 LLM 选择替代方案。
-
-⑤ 死循环检测
-
-LLM 反复调用同一工具但每次结果相同。处理：设置最大循环次数（如 10 次），超过后强制终止并返回兜底答案。同时在循环中检测"最近 3 次 Action 是否完全相同"，相同则触发重试/终止逻辑。
 
 **总结口述：**"我的工程实践是：每个工具调用都包裹 try-catch，返回结构化的错误信息（错误类型+错误原因+建议），然后把错误作为 Observation 反馈给 LLM，让它自己决定是重试、换工具还是换个思路。核心原则是'让 LLM 做决策而不是硬编码'。
 
@@ -2489,83 +2576,7 @@ L2：业务咨询下细分：订单查询/退换货/产品推荐/技术问题...
 
 ---
 
-## 🌟Q2：如何设计一个数据分析和报表生成 Agent？【设计题】
 
-**系统设计目标：** 用户用自然语言提问，Agent 自动查询数据库/数据源，生成分析结论和可视化图表。
-
-**核心架构（三阶段）：**
-
-① 自然语言 → SQL 查询（NL2SQL）
-
-用 LLM 做意图理解和 SQL 生成。关键挑战：
-- 表结构理解：把数据库 schema（表名、字段、含义）注入 prompt，让 LLM 理解能查什么。
-- SQL 正确性：生成的 SQL 必须做语法校验，执行前 review，高风险 SQL（如全表扫描、大量删除）需要二次确认。
-- 防注入：用户输入不做字符串拼接，用参数化查询。
-
-流程：`用户Query → 意图识别 → Schema匹配 → SQL生成 → 语法校验 → 执行 → 结果`
-
-② 数据分析与洞察生成
-
-查询结果返回后，LLM 分析数据特征：
-- 趋势判断（上升/下降/平稳）
-- 异常点检测（远超均值的数值）
-- 对比分析（同期环比、同比）
-- 归因推断（什么原因导致）
-
-输出结构化分析结论，语言简洁、可直接引用。
-
-③ 报表生成与自动化
-
-支持定时任务：设置"每周一生成上周经营日报"，Agent 自动执行查询+分析+发送邮件/钉钉消息。
-
-可视化：用 Python/Matplotlib 或 ECharts 生成图表，嵌入到 HTML/PDF 报告。
-
-**异动分析方法论:** 分析交易转化异动的原因「解决高维复杂数据矩阵」
-
-![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756115677410-0d27e24e-c42c-4bcf-8e68-645b8849eb34.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756115677410-0d27e24e-c42c-4bcf-8e68-645b8849eb34.png)
-
-痛点:
-
-- 数据分析策略: 统计学+数据建模归因体系,继续时序变化点检测的方法对数据进行动态切片
-
-- AI产品选型不足:使用Langraph+蓝鲸(内部模型广场),手动流程搭建、分析策略、归因推理分析.
-
-- AI数据分析能力增强: “交易侧的流量异常分析方法论”
-
-    
-
-    交易侧的流量异常分析方法论
-
-    ![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756113774797-f00e71e9-be6f-48e6-89db-4e23d35bf54a.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1756113774797-f00e71e9-be6f-48e6-89db-4e23d35bf54a.png)
-
-1. 异常时段定位：**我们采用基于时序数据变化点检测[1](CUSUM变化点检测 找到趋势发生变化的位置)的方法，对***数据进行动态切片**，捕捉异常波动的起止端点，让后续的分析能够聚焦于异常发生的真实时间窗口。对各个异常波动时段的**数据进行拟合[2]，确保数据对比分析具备科学性和有效性。
-2. **指标拆解归因：**将异常指标层层分解为过程指标。当顶层指标发生波动时，**计算各子指标的波动对总体波动的贡献度**，来定位关键的影响环节。具体来说，通过基于**偏导数的链式法则(输入变量的变动对结果贡献有多大)**[3]，将根指标变化分解为各子指标的线性叠加，来量化每个子指标对根指标异常的影响。
-3. **异动数据分析:** 各个交易链路的影响因素是多样的，我们基于上述两个“组合拳”下钻指标进行异常检测。综合维度数据、**用户行为数据以及后端接口日志等多源数据**，对**异常指标进行关联性分析**，力求还原异常发生的全链路过程，为根因定位提供数据支撑。
-
-![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754924209483-128bc2b1-a2b0-4f6c-85f7-fcc099ae9349.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754924209483-128bc2b1-a2b0-4f6c-85f7-fcc099ae9349.png)
-
-多Agent编排
-
-**思路1: Muti-Agent (层次团队)**
-
-- 基于贴合业务域的成熟方法论，编排分析工作流。
-- 构建多智能体（Agent）协作体系，每个Agent专注于不同分析环节（如**流量异动、订单结构异动、支付异动、归因结果**等）。各Agent之间分工明确、层层协作，实现复杂任务高效拆解与协同，提升整体分析效率和可扩展性。
-- ![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754815919365-8bcb1bb6-fe04-4532-b37d-523b911cba28.png](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754815919365-8bcb1bb6-fe04-4532-b37d-523b911cba28.png)
-
-**思路2: Plan & Execute （计划与执行）**
-
-- 智能规划：根据输入目标（如异常检测、归因分析）自动生成分步执行方案，动态流程编排。
-- 高效执行：集成数据获取、异常检测、维度下钻等原子能力模块，通过任务流调度实现归因报告输出
-
-![https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754925057478-ae0141a6-1a3e-4094-bd73-3f2b1b06e1b7.png?x-oss-process=image%2Fcrop%2Cx_20%2Cy_51%2Cw_1159%2Ch_765](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/184056472/1754925057478-ae0141a6-1a3e-4094-bd73-3f2b1b06e1b7.png?x-oss-process=image%2Fcrop%2Cx_20%2Cy_51%2Cw_1159%2Ch_765)
-
-**质量保障机制：**
-
-- SQL 执行结果和用户期望不符时，LLM 自动重写 SQL（Self-Correction）。
-- 关键数据加"人工确认"环节再对外发送。
-- 记录所有 Query-SQL 对应关系，用于持续优化 Prompt。
-
-**总结口述：**"数据分析 Agent 的本质是'把 SQL 能力用自然语言暴露出来'。核心难点不是 LLM 生成 SQL，而是 Schema 理解和 SQL 正确性校验。生产环境我一定会加人工确认节点，AI 辅助而非 AI 全权决策。"
 
 ---
 
